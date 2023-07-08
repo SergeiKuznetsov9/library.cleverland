@@ -40,6 +40,7 @@ import {
     bookListRequestSuccess,
     bookListRequestWithPagination,
     bookListRequestWithPaginationSuccess,
+    bookListSetData,
     bookRequest,
     bookRequestFailure,
     bookRequestSuccess,
@@ -73,13 +74,12 @@ function* bookListRequestWithPaginationWorker({
             ? ''
             : `${FILTERS.categories}${payload.category}`;
 
-    const bookingFree = payload.bookingFree ? FILTERS.booking : '';
     const searchingByTitle = payload.filter ? `${FILTERS.searchingByTitle}${payload.filter}` : '';
 
     try {
         const response: AxiosResponse<BookListItem[]> = yield call(
             axiosInstance.get,
-            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}${bookingFree}${searchingByTitle}`,
+            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}${searchingByTitle}`,
         );
 
         yield put(bookListRequestWithPaginationSuccess(response.data));
@@ -154,6 +154,7 @@ function* bookingRequestWorker({ payload }: PayloadAction<{ dateOrder: string; b
         const bookUpdateData = bookListData.find(
             ({ id: itemId }: BookListItem) => itemId === payload.bookId,
         );
+
         const userBookingUpdate: UserBooking = {
             id,
             order,
@@ -167,8 +168,24 @@ function* bookingRequestWorker({ payload }: PayloadAction<{ dateOrder: string; b
         if (booking?.isOnBookInfoPage) {
             yield put(bookRequest(book.data.id));
         } else {
-            yield put(bookListRequest());
-            // TODO менять стейт?
+            const booking = {
+                id: data.id,
+                order: data.attributes.order,
+                dateOrder: data.dateOrder,
+                customerId: userData.id,
+                customerFirstName: userData.firstName,
+                customerLastName: userData.lastName,
+            };
+
+            const newBookListData = bookListData.map((book: BookListItem) => {
+                if (book.id === payload.bookId) {
+                    return { ...book, booking };
+                }
+
+                return { ...book, booking: null };
+            });
+
+            yield put(bookListSetData(newBookListData));
         }
     } catch {
         yield put(bookingRequestFailure(ERROR.bookingError));
@@ -216,8 +233,12 @@ function* bookingUpdateRequestWorker({
     }
 }
 
-function* bookingDeleteRequestWorker({ payload }: PayloadAction<string>) {
-    const { booking, book } = yield select(booksSelector);
+function* bookingDeleteRequestWorker({ payload }: PayloadAction<number>) {
+    const {
+        booking,
+        book,
+        bookList: { data: bookListData },
+    } = yield select(booksSelector);
 
     try {
         const response: AxiosResponse = yield call(
@@ -237,7 +258,15 @@ function* bookingDeleteRequestWorker({ payload }: PayloadAction<string>) {
         if (booking?.isOnBookInfoPage) {
             yield put(bookRequest(book.data.id));
         } else {
-            yield put(bookListRequest());
+            const newBookListData = bookListData.map((book: BookListItem) => {
+                if (book.booking?.id === payload) {
+                    return { ...book, booking: null };
+                }
+
+                return book;
+            });
+
+            yield put(bookListSetData(newBookListData));
         }
     } catch {
         yield put(bookingRequestFailure(ERROR.bookingDelete));

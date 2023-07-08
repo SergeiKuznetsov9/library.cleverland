@@ -33,5 +33,4 @@ export const PAGINATION = {
 export const FILTERS = {
     categories: '&filters[categories][path][$eq]=',
     searchingByTitle: '&filters[title][$containsi]=',
-    booking: '&filters[booking][id][$notNull]=false',
 };

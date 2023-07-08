@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
-import { Sorting } from '../../constants/sorting';
 import { bookListRequestClean, bookListRequestWithPagination } from '../../store/books';
 import {
     getBookList,
     getIsAllBooksListDownloaded,
     getLoadingBooksList,
 } from '../../store/books/selectors';
+import { BookListItem } from '../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { searchSelector } from '../../store/search/selectors';
+import { createSortCriteriaQueryParams } from '../../utils/query-params-creators';
 import { Card } from '../card';
 
 import styles from './content.module.scss';
@@ -26,29 +27,21 @@ export const Content = ({ menuView }: ContentProps) => {
     const dispatch = useAppDispatch();
     const { category } = useParams();
     const bookList = useAppSelector(getBookList);
+    const [bookListForRender, setBookListForRender] = useState<BookListItem[]>([]);
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
-
     const { filter, sortCriteria, bookingFree } = useAppSelector(searchSelector);
 
     const listClassName = classNames(
         menuView === MenuViewEnum.window ? styles.viewWindow : styles.viewList,
     );
 
-    const createCriteriaString = (sortCriteria: Sorting[]) =>
-        sortCriteria.reduce(
-            (accum, criterion, index) =>
-                `${accum}&sort[${index}]=${criterion.value}%3A${criterion.direction}`,
-            '',
-        );
-
     const getBooksByPagination = () => {
         dispatch(
             bookListRequestWithPagination({
                 pageNumber,
                 category: category as string,
-                sortingCriteria: createCriteriaString(sortCriteria),
-                bookingFree,
+                sortingCriteria: createSortCriteriaQueryParams(sortCriteria),
                 filter,
             }),
         );
@@ -96,12 +89,20 @@ export const Content = ({ menuView }: ContentProps) => {
             firstUpdateFlag.current = false;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortCriteria, category, bookingFree, filter]);
+    }, [sortCriteria, category, filter]);
+
+    useEffect(() => {
+        const booksForRender = bookList?.filter((book) => !bookingFree || !book.booking);
+
+        setBookListForRender(booksForRender || []);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookList, bookingFree]);
 
     return (
         <main data-test-id='content'>
-            {bookList &&
-                (bookList.length === 0 ? (
+            {bookListForRender &&
+                (bookListForRender.length === 0 ? (
                     filter ? (
                         <div
                             className={styles.emptyDataText}
@@ -122,7 +123,7 @@ export const Content = ({ menuView }: ContentProps) => {
                         )}
                         data-test-id='cards-list'
                     >
-                        {bookList?.map((book) => (
+                        {bookListForRender?.map((book) => (
                             <Card data={book} key={book.id} menuView={menuView} />
                         ))}
                     </ul>
