@@ -98,7 +98,8 @@ export const Card = (props: BookType) => {
                     <p className={classNameCard('cardTitle')}>{handleHighlight(title)}</p>
                 </div>
                 <span className={classNameCard('cardAuthor')}>
-                    {authors && authors.length > 0 && authors.join(', ')}, {issueYear}
+                    {authors && authors.length > 0 && handleHighlight(authors.join(', '))},{' '}
+                    {issueYear}
                 </span>
                 {isProfileCard ? (
                     isHistory ? (
