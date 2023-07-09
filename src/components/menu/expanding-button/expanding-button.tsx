@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { SORTING, Sorting } from '../../../constants/sorting';
 import { useAppDispatch } from '../../../store/hooks';
-import { setSortCriterion } from '../../../store/search';
+import { setSortCriterion, setSortCriterionForRequest } from '../../../store/search';
 import { searchSelector } from '../../../store/search/selectors';
 import { Button } from '../../button';
 import chevronAsc from '../assets/icon-chevron-asc.svg';
@@ -66,6 +66,16 @@ export const ExpandingButton = ({
 
         filteredCriterias.push(sortingCriterion);
         dispatch(setSortCriterion(filteredCriterias));
+
+        if (sortingCriterion.value !== 'rating') {
+            const filteredCriteriasForRequest = sortCriteria.filter(
+                (criterion) => criterion.title !== sortingCriterion.title,
+            );
+
+            filteredCriteriasForRequest.push(sortingCriterion);
+            dispatch(setSortCriterionForRequest(filteredCriteriasForRequest));
+        }
+
         closeMenu(event);
     };
 
