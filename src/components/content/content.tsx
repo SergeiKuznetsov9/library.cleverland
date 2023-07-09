@@ -114,14 +114,20 @@ export const Content = ({ menuView }: ContentProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortCriteria, bookList, bookingFree]);
 
-    useEffect(() => {
-        const filteredList = bookListForRender.filter(
+    const filterData = () => {
+        const filteredData = bookListForRender.filter(
             (book) =>
                 book.title.toLowerCase().includes(filter.toLowerCase()) ||
                 book.authors.find((author) => author.toLowerCase().includes(filter.toLowerCase())),
         );
 
-        setBookListForRenderFiltered(filteredList);
+        setBookListForRenderFiltered(filteredData);
+    };
+
+    useEffect(() => {
+        const timer = setTimeout(filterData, 500);
+
+        return () => clearTimeout(timer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bookListForRender, filter]);
 
