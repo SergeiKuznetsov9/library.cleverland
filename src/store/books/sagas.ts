@@ -74,12 +74,10 @@ function* bookListRequestWithPaginationWorker({
             ? ''
             : `${FILTERS.categories}${payload.category}`;
 
-    const searchingByTitle = payload.filter ? `${FILTERS.searchingByTitle}${payload.filter}` : '';
-
     try {
         const response: AxiosResponse<BookListItem[]> = yield call(
             axiosInstance.get,
-            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}${searchingByTitle}`,
+            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}`,
         );
 
         yield put(bookListRequestWithPaginationSuccess(response.data));

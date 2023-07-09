@@ -82,7 +82,6 @@ export type BookListPaginationPayload = {
     pageNumber: number;
     category: string;
     sortingCriteria: string;
-    filter: string;
 };
 
 export type BookDataType = {

@@ -42,7 +42,6 @@ export const Content = ({ menuView }: ContentProps) => {
                 pageNumber,
                 category: category as string,
                 sortingCriteria: createSortCriteriaQueryParams(sortCriteria),
-                filter,
             }),
         );
     };
@@ -89,13 +88,12 @@ export const Content = ({ menuView }: ContentProps) => {
             firstUpdateFlag.current = false;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortCriteria, category, filter]);
+    }, [sortCriteria, category]);
 
     useEffect(() => {
         const booksForRender = bookList?.filter((book) => !bookingFree || !book.booking);
 
         setBookListForRender(booksForRender || []);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bookList, bookingFree]);
 

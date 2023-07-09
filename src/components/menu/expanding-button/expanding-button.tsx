@@ -16,11 +16,16 @@ import sortDesc from '../assets/sort-desc.svg';
 import styles from './expanding-button.module.scss';
 
 type ExpandingButtonProps = {
-    menuVisible: boolean;
-    setMenuVisible: (onChangeText: boolean) => void;
+    hideOtherControlsForSorting: () => void;
+    showOtherControlsForSorting: () => void;
+    cssClasses: string;
 };
 
-export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButtonProps) => {
+export const ExpandingButton = ({
+    hideOtherControlsForSorting,
+    showOtherControlsForSorting,
+    cssClasses,
+}: ExpandingButtonProps) => {
     const dispatch = useAppDispatch();
     const menuRef = useRef<HTMLDivElement | null>(null);
     const { sortCriteria } = useSelector(searchSelector);
@@ -28,7 +33,8 @@ export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButton
     useEffect(() => {
         function handleClickOutside(event: any) {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setMenuVisible(false);
+                menuRef.current?.classList.remove('displayFlex');
+                showOtherControlsForSorting();
             }
         }
 
@@ -44,11 +50,13 @@ export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButton
     const closeMenu = (event: MouseEvent) => {
         event.preventDefault();
         event.stopPropagation();
-        setMenuVisible(false);
+        menuRef.current?.classList.remove('displayFlex');
+        showOtherControlsForSorting();
     };
 
     const onOpenMenu = () => {
-        setMenuVisible(true);
+        menuRef.current?.classList.add('displayFlex');
+        hideOtherControlsForSorting();
     };
 
     const onChooseSortCriterion = (event: MouseEvent, sortingCriterion: Sorting) => {
@@ -62,64 +70,46 @@ export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButton
     };
 
     return (
-        <div className={styles.root}>
+        <div className={classNames(styles.root, cssClasses)}>
             <Button
                 classButton={classNames(styles.buttonSort)}
                 dataTestId='sort-rating-button'
                 onClick={onOpenMenu}
             >
-                <span>Сортировка</span>
-                <img src={chevronAsc} alt='icon-open' />
-            </Button>
-            <Button
-                classButton={classNames(styles.buttonSortSmall)}
-                onClick={onOpenMenu}
-                dataTestId='sort-rating-button'
-            >
-                <img src={sortDesc} alt='icon-open' />
+                <span className={styles.noDisplayOn640}>Сортировка</span>
+                <img src={chevronAsc} alt='icon-open' className={styles.noDisplayOn640} />
+                <img src={sortDesc} alt='icon-open' className={styles.displayOn640} />
             </Button>
 
-            {menuVisible && (
-                <div className={styles.sortingMenu} ref={menuRef}>
-                    <a
-                        href=''
-                        className={styles.sortingMenuHeader}
-                        onClick={(event) => closeMenu(event)}
-                    >
-                        <span>Сортировка</span>
-                        <img
-                            src={chevronDesc}
-                            alt='icon-open'
-                            className={styles.noDisplayWhen370}
-                        />
-                        <img src={iconClose} alt='icon-close' className={styles.displayWhen370} />
-                    </a>
-                    <hr className={styles.devider} />
-                    <ul>
-                        {SORTING.map((sortingCriterion) => (
-                            <li key={sortingCriterion.description}>
-                                <a
-                                    href=''
-                                    onClick={(event) =>
-                                        onChooseSortCriterion(event, sortingCriterion)
-                                    }
-                                >
-                                    <span>{sortingCriterion.title}</span>
-                                    <img
-                                        src={
-                                            sortingCriterion.direction === 'asc'
-                                                ? sortAsc
-                                                : sortDesc
-                                        }
-                                        alt='icon-sort'
-                                    />
-                                </a>
-                                <hr className={styles.smallScreenDevider} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            <div className={classNames(styles.sortingMenu, 'displayNone')} ref={menuRef}>
+                <a
+                    href=''
+                    className={styles.sortingMenuHeader}
+                    onClick={(event) => closeMenu(event)}
+                >
+                    <span>Сортировка</span>
+                    <img src={chevronDesc} alt='icon-open' className={styles.noDisplayWhen370} />
+                    <img src={iconClose} alt='icon-close' className={styles.displayWhen370} />
+                </a>
+                <hr className={styles.devider} />
+                <ul className={styles.sortingList}>
+                    {SORTING.map((sortingCriterion) => (
+                        <li key={sortingCriterion.description}>
+                            <a
+                                href=''
+                                onClick={(event) => onChooseSortCriterion(event, sortingCriterion)}
+                            >
+                                <span>{sortingCriterion.title}</span>
+                                <img
+                                    src={sortingCriterion.direction === 'asc' ? sortAsc : sortDesc}
+                                    alt='icon-sort'
+                                />
+                            </a>
+                            <hr className={styles.smallScreenDevider} />
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

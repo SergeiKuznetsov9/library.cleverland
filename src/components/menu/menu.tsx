@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
@@ -20,10 +20,10 @@ export type MenyProps = {
 };
 
 export const Menu = ({ menuView, setMenuView }: MenyProps) => {
-    const [menuVisible, setMenuVisible] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-    const [isFilteringExpanded, setIsFilteringExpanded] = useState(false);
+    const [cssClassesForSorting, setCssClassesForSorting] = useState('');
+    const [cssClassesForSearching, setCssClassesForSearching] = useState('');
+    const bookingViewElems = useRef<HTMLDivElement | null>(null);
     const bookList = useAppSelector(getBookList);
     const dispatch = useAppDispatch();
 
@@ -32,26 +32,25 @@ export const Menu = ({ menuView, setMenuView }: MenyProps) => {
         setIsChecked(!isChecked);
     };
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 550) {
-                if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                }
+    const hideOtherControlsForSorting = () => {
+        bookingViewElems.current?.classList.add('noDisplayOn640');
+        setCssClassesForSorting('noDisplayOn370');
+    };
 
-                if (isFilteringExpanded) {
-                    setIsFilteringExpanded(false);
-                }
-            }
-        };
+    const showOtherControlsForSorting = () => {
+        bookingViewElems.current?.classList.remove('noDisplayOn640');
+        setCssClassesForSorting('');
+    };
 
-        window.addEventListener('resize', handleResize);
+    const hideOtherControlsForSearching = () => {
+        setCssClassesForSearching('noDisplayOn550');
+        bookingViewElems.current?.classList.add('noDisplayOn550');
+    };
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSearchExpanded, isFilteringExpanded]);
+    const showOtherControlsForSearching = () => {
+        setCssClassesForSearching('');
+        bookingViewElems.current?.classList.remove('noDisplayOn550');
+    };
 
     return (
         <div className={classNames(styles.menu)}>
@@ -59,54 +58,45 @@ export const Menu = ({ menuView, setMenuView }: MenyProps) => {
                 <React.Fragment>
                     <div className={classNames(styles.searchSortBlock)}>
                         <Search
-                            isSearchExpanded={isSearchExpanded}
-                            setIsSearchExpanded={setIsSearchExpanded}
-                            menuVisible={menuVisible}
+                            cssClasses={cssClassesForSorting}
+                            hideOtherControlsForSearching={hideOtherControlsForSearching}
+                            showOtherControlsForSearching={showOtherControlsForSearching}
                         />
-
-                        {!isSearchExpanded && (
-                            <ExpandingButton
-                                menuVisible={menuVisible}
-                                setMenuVisible={setMenuVisible}
-                            />
-                        )}
+                        <ExpandingButton
+                            hideOtherControlsForSorting={hideOtherControlsForSorting}
+                            showOtherControlsForSorting={showOtherControlsForSorting}
+                            cssClasses={cssClassesForSearching}
+                        />
                     </div>
-                    {!isSearchExpanded && (
-                        <div
-                            className={classNames(
-                                styles.display,
-                                menuVisible && styles.noDisplayWhen640,
-                            )}
+
+                    <div ref={bookingViewElems} className={classNames(styles.display)}>
+                        <label className={styles.bookingContainer}>
+                            <input
+                                type='checkbox'
+                                className={styles.bookingCheckbox}
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                            />
+                            <span className={styles.bookingLabel}>Скрыть бронь</span>
+                        </label>
+
+                        <Button
+                            classButton={styles.buttonDisplay}
+                            onClick={() => {
+                                setMenuView(
+                                    menuView === MenuViewEnum.list
+                                        ? MenuViewEnum.window
+                                        : MenuViewEnum.list,
+                                );
+                            }}
+                            dataTestId='button-menu-view-list'
                         >
-                            <label className={styles.bookingContainer}>
-                                <input
-                                    type='checkbox'
-                                    className={styles.bookingCheckbox}
-                                    checked={isChecked}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <span className={styles.bookingLabel}>Скрыть бронь</span>
-                            </label>
-                            <Button
-                                classButton={styles.buttonDisplay}
-                                onClick={() => {
-                                    setMenuView(
-                                        menuView === MenuViewEnum.list
-                                            ? MenuViewEnum.window
-                                            : MenuViewEnum.list,
-                                    );
-                                }}
-                                dataTestId='button-menu-view-list'
-                            >
-                                <img
-                                    src={
-                                        menuView === MenuViewEnum.list ? displayWindow : displayList
-                                    }
-                                    alt='icon-view'
-                                />
-                            </Button>
-                        </div>
-                    )}
+                            <img
+                                src={menuView === MenuViewEnum.list ? displayWindow : displayList}
+                                alt='icon-view'
+                            />
+                        </Button>
+                    </div>
                 </React.Fragment>
             )}
         </div>

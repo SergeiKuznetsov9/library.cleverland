@@ -1,85 +1,79 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppDispatch } from '../../store/hooks';
 import { searchbookList } from '../../store/search';
-import { searchSelector } from '../../store/search/selectors';
 import { Button } from '../button';
 
 import iconClose from './assets/icon-close.svg';
 import iconSearch from './assets/icon-search.svg';
+import iconSearchColor from './assets/icon-search-color.svg';
 
 import styles from './search.module.scss';
 
 type SearchProps = {
-    isSearchExpanded: boolean;
-    setIsSearchExpanded: (onChangeText: boolean) => void;
-    menuVisible: boolean;
+    cssClasses: string;
+    hideOtherControlsForSearching: () => void;
+    showOtherControlsForSearching: () => void;
 };
 
-export const Search = ({ isSearchExpanded, setIsSearchExpanded, menuVisible }: SearchProps) => {
+export const Search = ({
+    cssClasses,
+    hideOtherControlsForSearching,
+    showOtherControlsForSearching,
+}: SearchProps) => {
     const dispatch = useAppDispatch();
-    const { filter } = useAppSelector(searchSelector);
     const [value, setValue] = useState('');
+    const [fullWidth, setFullWidth] = useState('');
+    const [hideButton, setHideButton] = useState('');
+    const inputContainerRef = useRef<HTMLDivElement | null>(null);
 
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         setValue(target.value.trimStart());
+        dispatch(searchbookList(target.value.trimStart().toLowerCase()));
     };
 
-    const handleSearch = () => {
-        dispatch(searchbookList(value.toLowerCase()));
+    const onOpenInput = () => {
+        inputContainerRef.current?.classList.add('displayBlock');
+        hideOtherControlsForSearching();
+        setHideButton('displayNone');
+        setFullWidth('fullWidthOn550');
     };
 
-    const handleEnterPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log(event);
-        if (event.key === 'Enter') {
-            dispatch(searchbookList(value.toLowerCase()));
-        }
+    const onCloseInput = () => {
+        inputContainerRef.current?.classList.remove('displayBlock');
+        showOtherControlsForSearching();
+        setHideButton('');
+        setFullWidth('');
     };
-
-    useEffect(() => {
-        setValue(filter);
-    }, [filter]);
 
     return (
-        <div className={classNames(styles.search, menuVisible && styles.noDisplayWhen370)}>
+        <div className={classNames(styles.search, cssClasses, fullWidth)}>
             <Button
-                classButton={classNames(
-                    styles.searchButton,
-                    isSearchExpanded && styles.buttonHidden,
-                )}
-                onClick={() => setIsSearchExpanded(true)}
+                classButton={classNames(styles.openSearchingButton, hideButton)}
+                onClick={onOpenInput}
                 dataTestId='button-search-open'
             >
                 <img src={iconSearch} alt='icon-search' />
             </Button>
-            <input
-                className={classNames(styles.input, isSearchExpanded && styles.elementShow)}
-                placeholder='Поиск книги или автора…'
-                value={value}
-                onChange={handleChange}
-                onKeyDown={handleEnterPress}
-                data-test-id='input-search'
-            />
-            <Button
-                classButton={classNames(
-                    styles.searchButtonSend,
-                    isSearchExpanded && styles.searchButtonSendShow,
-                )}
-                onClick={handleSearch}
-            >
-                &nbsp;
-            </Button>
-            <Button
-                classButton={classNames(
-                    styles.searchButtonClose,
-                    !isSearchExpanded && styles.buttonHidden,
-                )}
-                onClick={() => setIsSearchExpanded(false)}
-                dataTestId='button-search-close'
-            >
-                <img src={iconClose} alt='icon-close' />
-            </Button>
+            <div className={styles.inputContainer} ref={inputContainerRef}>
+                <input
+                    className={classNames(styles.input)}
+                    placeholder='Поиск книги или автора…'
+                    value={value}
+                    onChange={handleChange}
+                    data-test-id='input-search'
+                />
+                <img src={iconSearch} alt='icon-search' className={styles.iconSearch} />
+                <img src={iconSearchColor} alt='icon-search' className={styles.iconSearchColor} />
+                <Button
+                    classButton={classNames(styles.closeButton)}
+                    onClick={onCloseInput}
+                    dataTestId='button-search-close'
+                >
+                    <img src={iconClose} alt='icon-close' />
+                </Button>
+            </div>
         </div>
     );
 };

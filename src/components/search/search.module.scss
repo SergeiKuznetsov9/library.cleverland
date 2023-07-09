@@ -6,6 +6,10 @@
     align-items: center;
 }
 
+.inputContainer {
+    position: relative;
+}
+
 .input {
     margin: 0;
     width: 350px;
@@ -27,34 +31,39 @@
     caret-color: #f83600;
 }
 
-.searchButton {
+.iconSearchColor,
+.iconSearch {
+    position: absolute;
+    left: 16px;
+    top: 11px;
+}
+
+.input:focus ~ .iconSearch {
     display: none;
 }
 
-.searchButtonClose {
+.iconSearchColor {
+    display: none;
+}
+
+.input:focus ~ .iconSearchColor {
+    display: block;
+}
+
+.closeButton {
     background-color: inherit;
     width: 16px;
     height: 16px;
     border: none;
+    right: 30px;
+    top: 11px;
     cursor: pointer;
+    position: absolute;
     display: none;
 }
 
-.searchButtonSend {
-    position: absolute;
-    left: 9px;
-    width: 30px;
-    height: 83%;
-    cursor: pointer;
-    border: 0;
-    background-image: url(./assets/icon-search.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: var(--background-main);
-}
-
-.input:focus + .searchButtonSend {
-    background-image: url(./assets/icon-search-color.svg);
+.openSearchingButton {
+    display: none;
 }
 
 @media (max-width: 1080px) {
@@ -87,38 +96,19 @@
         align-items: start;
     }
 
+    .inputContainer {
+        display: none;
+    }
+
     .input {
-        top: 0;
-        left: 0;
-        width: 88vw;
-        height: 38px;
-        background-image: none;
-        position: absolute;
-        display: none;
+        width: 100%;
     }
 
-    .searchButtonSend {
-        top: 3px;
-        display: none;
-    }
-
-    .searchButtonSendShow {
+    .closeButton {
         display: block;
     }
 
-    .elementShow {
-        display: block;
-        position: relative;
-    }
-
-    .searchButtonClose {
-        position: absolute;
-        display: block;
-        right: 30px;
-        top: 11px;
-    }
-
-    .searchButton {
+    .openSearchingButton {
         display: grid;
         width: 38px;
         height: 38px;
@@ -131,40 +121,16 @@
         grid-auto-flow: column;
         cursor: pointer;
         transition: all 0.2s linear;
-    }
 
-    .input:focus {
-        border: 1px solid #e3e3e3;
-        background-image: none;
+        &:hover {
+            box-shadow: var(--box-shadow-button-hover);
+        }
     }
 }
 
 @media (max-width: 370px) {
-    .input {
-        width: 84vw;
-        height: 32px;
-    }
-
-    .searchButton {
+    .openSearchingButton {
         width: 30px;
         height: 30px;
     }
-
-    .searchButtonSend {
-        left: 9px;
-        width: 28px;
-        height: 67%;
-    }
-
-    .searchButtonClose {
-        top: 8px;
-    }
-
-    .noDisplayWhen370 {
-        display: none;
-    }
-}
-
-.buttonHidden {
-    display: none;
 }

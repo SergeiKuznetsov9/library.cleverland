@@ -1,17 +1,15 @@
 .menu {
-    grid-area: menu;
-    display: grid;
+    display: flex;
     justify-content: space-between;
-    grid-template-columns: 1fr 1fr;
     margin-bottom: 16px;
     position: relative;
-    column-gap: 32px;
+    gap: 32px;
 }
 
 .searchSortBlock {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    column-gap: 16px;
+    flex-grow: 1;
+    display: flex;
+    gap: 16px;
 }
 
 .searchSortBlockNoGap {
@@ -96,12 +94,6 @@
 @media (max-width: 800px) {
     .menu {
         margin-bottom: 24px;
-    }
-}
-
-@media (max-width: 640px) {
-    .noDisplayWhen640 {
-        display: none;
     }
 }
 

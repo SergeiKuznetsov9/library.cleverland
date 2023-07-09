@@ -36,7 +36,6 @@
     left: -2px;
     padding: 10px 18px;
     width: 139px;
-    display: flex;
     flex-direction: column;
     background-color: #ffffff;
     border-radius: 20px;
@@ -94,22 +93,8 @@
     }
 }
 
-.buttonSortSmall {
-    width: 38px;
-    height: 38px;
+.displayOn640 {
     display: none;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: var(--background-main);
-    box-shadow: var(--box-shadow-button);
-    border: none;
-    border-radius: 50%;
-    color: var(--subtitle);
-    cursor: pointer;
-    transition: all 0.2s linear;
 }
 
 @media (max-width: 640px) {
@@ -117,12 +102,28 @@
         width: 38px;
     }
 
-    .buttonSort {
+    .noDisplayOn640 {
         display: none;
     }
 
-    .buttonSortSmall {
-        display: flex;
+    .displayOn640 {
+        display: block;
+    }
+
+    .buttonSort {
+        width: 38px;
+        height: 38px;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-shadow: var(--box-shadow-button);
+        border: none;
+        border-radius: 50%;
+        color: var(--subtitle);
+        cursor: pointer;
+        transition: all 0.2s linear;
+        padding: 0;
     }
 }
 
@@ -132,7 +133,7 @@
         height: 30px;
     }
 
-    .buttonSortSmall {
+    .buttonSort {
         width: 30px;
         height: 30px;
     }
