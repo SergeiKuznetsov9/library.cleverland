@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
 import { getBookList } from '../../store/books/selectors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setSortMethod } from '../../store/search';
-import { searchSelector } from '../../store/search/selectors';
+import { setBookingFree } from '../../store/search';
 import { Button } from '../button';
 import { Search } from '../search';
 
 import displayList from './assets/icon-line.svg';
-import displayListActive from './assets/icon-line-active.svg';
 import displayWindow from './assets/icon-square.svg';
-import displayWindowActive from './assets/icon-square-active.svg';
-import sortAsc from './assets/sort-asc.svg';
-import sortDesc from './assets/sort-desc.svg';
+import { ExpandingButton } from './expanding-button';
 
 import styles from './menu.module.scss';
 
@@ -24,80 +20,83 @@ export type MenyProps = {
 };
 
 export const Menu = ({ menuView, setMenuView }: MenyProps) => {
-    const [isSearhView, setSearhView] = useState(true);
-    const { isSortedDesc } = useAppSelector(searchSelector);
+    const [isChecked, setIsChecked] = useState(false);
+    const [cssClassesForSorting, setCssClassesForSorting] = useState('');
+    const [cssClassesForSearching, setCssClassesForSearching] = useState('');
+    const bookingViewElems = useRef<HTMLDivElement | null>(null);
     const bookList = useAppSelector(getBookList);
     const dispatch = useAppDispatch();
 
-    const handleSort = () => {
-        dispatch(setSortMethod());
+    const handleCheckboxChange = () => {
+        dispatch(setBookingFree(!isChecked));
+        setIsChecked(!isChecked);
+    };
+
+    const hideOtherControlsForSorting = () => {
+        bookingViewElems.current?.classList.add('noDisplayOn640');
+        setCssClassesForSorting('noDisplayOn370');
+    };
+
+    const showOtherControlsForSorting = () => {
+        bookingViewElems.current?.classList.remove('noDisplayOn640');
+        setCssClassesForSorting('');
+    };
+
+    const hideOtherControlsForSearching = () => {
+        setCssClassesForSearching('noDisplayOn550');
+        bookingViewElems.current?.classList.add('noDisplayOn550');
+    };
+
+    const showOtherControlsForSearching = () => {
+        setCssClassesForSearching('');
+        bookingViewElems.current?.classList.remove('noDisplayOn550');
     };
 
     return (
-        <div className={classNames(styles.menu, !isSearhView && styles.menuSearh)}>
+        <div className={classNames(styles.menu)}>
             {bookList && (
                 <React.Fragment>
-                    <div
-                        className={classNames(
-                            styles.searchSortBlock,
-                            !isSearhView && styles.searchSortBlockNoGap,
-                        )}
-                    >
-                        <Search isSearhView={isSearhView} setSearhView={setSearhView} />
+                    <div className={classNames(styles.searchSortBlock)}>
+                        <Search
+                            cssClasses={cssClassesForSorting}
+                            hideOtherControlsForSearching={hideOtherControlsForSearching}
+                            showOtherControlsForSearching={showOtherControlsForSearching}
+                        />
+                        <ExpandingButton
+                            hideOtherControlsForSorting={hideOtherControlsForSorting}
+                            showOtherControlsForSorting={showOtherControlsForSorting}
+                            cssClasses={cssClassesForSearching}
+                        />
+                    </div>
+
+                    <div ref={bookingViewElems} className={classNames(styles.display)}>
+                        <label className={styles.bookingContainer}>
+                            <input
+                                type='checkbox'
+                                className={styles.bookingCheckbox}
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                            />
+                            <span className={styles.bookingLabel}>Скрыть бронь</span>
+                        </label>
+
                         <Button
-                            classButton={classNames(
-                                styles.buttonSort,
-                                !isSearhView && styles.buttonHidden,
-                            )}
-                            onClick={handleSort}
-                            dataTestId='sort-rating-button'
+                            classButton={styles.buttonDisplay}
+                            onClick={() => {
+                                setMenuView(
+                                    menuView === MenuViewEnum.list
+                                        ? MenuViewEnum.window
+                                        : MenuViewEnum.list,
+                                );
+                            }}
+                            dataTestId='button-menu-view-list'
                         >
-                            <img src={isSortedDesc ? sortDesc : sortAsc} alt='icon-sort' />
-                            <span className={styles.buttonSortText}>По рейтингу</span>
+                            <img
+                                src={menuView === MenuViewEnum.list ? displayWindow : displayList}
+                                alt='icon-view'
+                            />
                         </Button>
                     </div>
-                    {isSearhView && (
-                        <div className={styles.display}>
-                            <Button
-                                classButton={classNames(
-                                    styles.buttonDisplay,
-                                    menuView === MenuViewEnum.window && styles.buttonDisplayActive,
-                                )}
-                                onClick={() => {
-                                    setMenuView(MenuViewEnum.window);
-                                }}
-                                dataTestId='button-menu-view-window'
-                            >
-                                <img
-                                    src={
-                                        menuView === MenuViewEnum.window
-                                            ? displayWindowActive
-                                            : displayWindow
-                                    }
-                                    alt='icon-window'
-                                />
-                            </Button>
-                            <Button
-                                classButton={classNames(
-                                    styles.buttonDisplay,
-                                    menuView === MenuViewEnum.list && styles.buttonDisplayActive,
-                                )}
-                                onClick={() => {
-                                    setMenuView(MenuViewEnum.list);
-                                }}
-                                dataTestId='button-menu-view-list'
-                            >
-                                <img
-                                    src={
-                                        menuView === MenuViewEnum.list
-                                            ? displayListActive
-                                            : displayList
-                                    }
-                                    alt='icon-list'
-                                />
-                            </Button>
-                        </div>
-                    )}
                 </React.Fragment>
             )}
         </div>

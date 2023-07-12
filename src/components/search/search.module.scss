@@ -1,15 +1,17 @@
 .search {
     display: grid;
+    position: relative;
     grid-auto-flow: column;
     column-gap: 6px;
     align-items: center;
 }
 
+.inputContainer {
+    position: relative;
+}
+
 .input {
     margin: 0;
-    background-image: url(./assets/icon-search.svg);
-    background-repeat: no-repeat;
-    background-position: 16px;
     width: 350px;
     height: 38px;
     background-color: var(--background-main);
@@ -27,22 +29,44 @@
 .input:focus {
     outline: none;
     caret-color: #f83600;
-    background-image: url(./assets/icon-search-color.svg);
 }
 
-.searchButton {
+.iconSearchColor,
+.iconSearch {
+    position: absolute;
+    left: 16px;
+    top: 11px;
+}
+
+.input:focus ~ .iconSearch {
     display: none;
 }
 
-.searchButtonClose {
+.iconSearchColor {
+    display: none;
+}
+
+.input:focus ~ .iconSearchColor {
+    display: block;
+}
+
+.closeButton {
     background-color: inherit;
     width: 16px;
     height: 16px;
     border: none;
+    right: 30px;
+    top: 11px;
     cursor: pointer;
+    position: absolute;
+    display: none;
 }
 
-@media (max-width: 1070px) {
+.openSearchingButton {
+    display: none;
+}
+
+@media (max-width: 1080px) {
     .input {
         width: 274px;
     }
@@ -60,35 +84,31 @@
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 720px) {
+    .input {
+        width: 244px;
+    }
+}
+
+@media (max-width: 550px) {
     .search {
         height: 38px;
         align-items: start;
     }
 
-    .input {
-        top: 0;
-        left: 0;
-        width: 88vw;
-        height: 38px;
-        background-image: none;
-        padding-left: 16px;
-        position: absolute;
+    .inputContainer {
         display: none;
     }
 
-    .buttonShow {
+    .input {
+        width: 100%;
+    }
+
+    .closeButton {
         display: block;
-        position: relative;
     }
 
-    .searchButtonClose {
-        position: absolute;
-        right: 30px;
-        top: 11px;
-    }
-
-    .searchButton {
+    .openSearchingButton {
         display: grid;
         width: 38px;
         height: 38px;
@@ -100,30 +120,17 @@
         border-radius: 599px;
         grid-auto-flow: column;
         cursor: pointer;
-    }
+        transition: all 0.2s linear;
 
-    .input:focus {
-        border: 1px solid #e3e3e3;
-        background-image: none;
+        &:hover {
+            box-shadow: var(--box-shadow-button-hover);
+        }
     }
 }
 
 @media (max-width: 370px) {
-    .input {
-        width: 84vw;
-        height: 32px;
-    }
-
-    .searchButton {
+    .openSearchingButton {
         width: 30px;
         height: 30px;
     }
-
-    .searchButtonClose {
-        top: 8px;
-    }
-}
-
-.buttonHidden {
-    display: none;
 }

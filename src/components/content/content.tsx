@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
 import { bookListRequestClean, bookListRequestWithPagination } from '../../store/books';
 import {
-    getBookCategories,
     getBookList,
     getIsAllBooksListDownloaded,
     getLoadingBooksList,
@@ -13,6 +12,7 @@ import {
 import { BookListItem } from '../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { searchSelector } from '../../store/search/selectors';
+import { createSortCriteriaQueryParams } from '../../utils/query-params-creators';
 import { Card } from '../card';
 
 import styles from './content.module.scss';
@@ -22,30 +22,36 @@ type ContentProps = {
 };
 
 export const Content = ({ menuView }: ContentProps) => {
-    const [data, setData] = useState<BookListItem[] | null>(null);
-    const [activeCategory, setActiveCategory] = useState('all');
     const [pageNumber, setPageNumber] = useState(1);
-
+    const firstUpdateFlag = useRef(true);
     const dispatch = useAppDispatch();
     const { category } = useParams();
-
     const bookList = useAppSelector(getBookList);
+    const [bookListForRender, setBookListForRender] = useState<BookListItem[]>([]);
+    const [bookListForRenderFiltered, setBookListForRenderFiltered] = useState<BookListItem[]>([]);
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
-    const bookCategories = useAppSelector(getBookCategories);
-    const { filter, isSortedDesc } = useAppSelector(searchSelector);
+    const { filter, sortCriteria, sortCriteriaForRequest, bookingFree } =
+        useAppSelector(searchSelector);
 
     const listClassName = classNames(
         menuView === MenuViewEnum.window ? styles.viewWindow : styles.viewList,
     );
 
     const getBooksByPagination = () => {
-        dispatch(bookListRequestWithPagination({ pageNumber, category: category as string }));
+        dispatch(
+            bookListRequestWithPagination({
+                pageNumber,
+                category: category as string,
+                sortingCriteria: createSortCriteriaQueryParams(sortCriteriaForRequest),
+            }),
+        );
     };
 
     useEffect(() => {
         dispatch(bookListRequestClean());
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         const scrollHandler = (event: any) => {
@@ -55,6 +61,7 @@ export const Content = ({ menuView }: ContentProps) => {
 
             if (scrollTop + innerHeight >= offsetHeight - 100 && !isLoading && !isAllDownloaded) {
                 setPageNumber((currentPage) => currentPage + 1);
+                document.removeEventListener('scroll', scrollHandler);
             }
         };
 
@@ -72,41 +79,62 @@ export const Content = ({ menuView }: ContentProps) => {
     }, [pageNumber]);
 
     useEffect(() => {
-        if (category !== activeCategory) {
+        if (!firstUpdateFlag.current) {
             dispatch(bookListRequestClean());
-
             if (pageNumber === 1) {
                 getBooksByPagination();
             } else {
                 setPageNumber(1);
             }
+        } else {
+            firstUpdateFlag.current = false;
         }
-
-        setActiveCategory(category as string);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category, activeCategory, dispatch]);
+    }, [sortCriteriaForRequest, category]);
 
     useEffect(() => {
-        if (bookList) {
-            const searchResult =
-                filter.length > 0
-                    ? bookList.filter(({ title }) => title.toLowerCase().includes(filter))
-                    : bookList;
+        const ratingCriterion = sortCriteria.find((criterion) => criterion.value === 'rating');
 
-            const sortedByRating = [...searchResult].sort((a, b) =>
-                isSortedDesc ? b.rating - a.rating : a.rating - b.rating,
+        if (ratingCriterion && bookList) {
+            const sortingFunc =
+                ratingCriterion.direction === 'asc'
+                    ? (a: BookListItem, b: BookListItem) => a.rating - b.rating
+                    : (a: BookListItem, b: BookListItem) => b.rating - a.rating;
+            const listWithNewOrder = [...bookList].sort(sortingFunc);
+            const booksForRender = listWithNewOrder?.filter(
+                (book) => !bookingFree || !book.booking,
             );
 
-            setData(sortedByRating);
+            setBookListForRender(booksForRender);
+        } else {
+            const booksForRender = bookList?.filter((book) => !bookingFree || !book.booking);
+
+            setBookListForRender(booksForRender || []);
         }
-    }, [filter, bookList, isSortedDesc, activeCategory]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortCriteria, bookList, bookingFree]);
+
+    const filterData = () => {
+        const filteredData = bookListForRender.filter(
+            (book) =>
+                book.title.toLowerCase().includes(filter.toLowerCase()) ||
+                book.authors.find((author) => author.toLowerCase().includes(filter.toLowerCase())),
+        );
+
+        setBookListForRenderFiltered(filteredData);
+    };
+
+    useEffect(() => {
+        const timer = setTimeout(filterData, 500);
+
+        return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookListForRender, filter]);
 
     return (
         <main data-test-id='content'>
-            {bookList &&
-                bookCategories &&
-                (data && data.length === 0 ? (
+            {bookListForRenderFiltered &&
+                (bookListForRenderFiltered.length === 0 ? (
                     filter ? (
                         <div
                             className={styles.emptyDataText}
@@ -127,7 +155,7 @@ export const Content = ({ menuView }: ContentProps) => {
                         )}
                         data-test-id='cards-list'
                     >
-                        {data?.map((book) => (
+                        {bookListForRenderFiltered?.map((book) => (
                             <Card data={book} key={book.id} menuView={menuView} />
                         ))}
                     </ul>

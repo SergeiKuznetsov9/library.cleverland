@@ -1,46 +1,15 @@
 .menu {
-    grid-area: menu;
-    display: grid;
-    justify-content: space-between;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 32px;
-    position: relative;
-}
-
-.buttonSort {
-    background-repeat: no-repeat;
-    background-position: 16px 50%;
-    height: 38px;
-    background-color: var(--background-main);
-    box-shadow: none;
-    border-radius: 599px;
-    border: 1px solid #e3e3e3;
-    padding: 0 16px;
-    color: var(--subtitle);
-    cursor: pointer;
-    transition: box-shadow 0.2s linear;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 0 8px;
-}
-
-.buttonSort:hover {
-    box-shadow: var(--box-shadow-button-hover);
-}
-
-.buttonSort:active {
-    box-shadow: var(--box-shadow-button-active);
-}
-
-.buttonSortText {
-    text-align: start;
+    margin-bottom: 16px;
+    position: relative;
+    gap: 32px;
 }
 
 .searchSortBlock {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    column-gap: 16px;
+    flex-grow: 1;
+    display: flex;
+    gap: 16px;
 }
 
 .searchSortBlockNoGap {
@@ -51,7 +20,34 @@
     display: grid;
     grid-template-columns: max-content max-content;
     justify-content: end;
-    column-gap: 16px;
+    align-items: center;
+    column-gap: 32px;
+}
+
+.bookingContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bookingCheckbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #a7a7a7;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.bookingCheckbox:checked {
+    border: none;
+    background-image: url('./assets/checkbox-background.svg');
+    background-position: center;
+    background-size: cover;
 }
 
 .buttonDisplay {
@@ -85,21 +81,19 @@
     display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1120px) {
     .menu {
-        margin-bottom: 24px;
+        column-gap: 16px;
+    }
+
+    .display {
+        column-gap: 16px;
     }
 }
 
-@media (max-width: 620px) {
-    .buttonSort {
-        width: 38px;
-        height: 38px;
-        padding: 0;
-        justify-content: center;
-        .buttonSortText {
-            display: none;
-        }
+@media (max-width: 800px) {
+    .menu {
+        margin-bottom: 24px;
     }
 }
 
@@ -109,17 +103,24 @@
         margin-bottom: 20px;
     }
 
-    .menuSearh {
-        grid-template-columns: 1fr;
-    }
-
-    .buttonSort {
-        width: 32px;
-        height: 32px;
-    }
-
     .buttonDisplay {
         height: 32px;
         width: 32px;
+    }
+
+    .bookingContainer {
+        gap: 4px;
+    }
+
+    .bookingCheckbox {
+        width: 16px;
+        height: 16px;
+    }
+
+    .bookingLabel {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0.2px;
     }
 }

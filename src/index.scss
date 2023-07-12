@@ -90,3 +90,37 @@ select {
 ::-webkit-scrollbar-thumb:hover {
     background: #cecece;
 }
+
+.displayNone {
+    display: none;
+}
+
+.displayFlex {
+    display: flex;
+}
+
+.displayBlock {
+    display: block;
+}
+
+@media (max-width: 640px) {
+    .noDisplayOn640 {
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {
+    .noDisplayOn550 {
+        display: none;
+    }
+
+    .fullWidthOn550 {
+        width: 100%;
+    }
+}
+
+@media (max-width: 370px) {
+    .noDisplayOn370 {
+        display: none;
+    }
+}

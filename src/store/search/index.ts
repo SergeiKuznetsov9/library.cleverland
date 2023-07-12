@@ -1,10 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { Sorting } from '../../constants/sorting';
+
 import { SearchParams } from './types';
 
 export const initialState: SearchParams = {
     filter: '',
-    isSortedDesc: true,
+    sortCriteria: [],
+    sortCriteriaForRequest: [],
+    bookingFree: false,
 };
 
 export const searchSlice = createSlice({
@@ -14,10 +18,17 @@ export const searchSlice = createSlice({
         searchbookList: (state, action: PayloadAction<string>) => {
             state.filter = action.payload;
         },
-        setSortMethod: (state) => {
-            state.isSortedDesc = !state.isSortedDesc;
+        setSortCriterion: (state, action: PayloadAction<Sorting[]>) => {
+            state.sortCriteria = action.payload;
+        },
+        setSortCriterionForRequest: (state, action: PayloadAction<Sorting[]>) => {
+            state.sortCriteriaForRequest = action.payload;
+        },
+        setBookingFree: (state, action: PayloadAction<boolean>) => {
+            state.bookingFree = action.payload;
         },
     },
 });
 
-export const { searchbookList, setSortMethod } = searchSlice.actions;
+export const { searchbookList, setSortCriterion, setSortCriterionForRequest, setBookingFree } =
+    searchSlice.actions;

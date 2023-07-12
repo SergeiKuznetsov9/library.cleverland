@@ -1,4 +1,8 @@
+import { Sorting } from '../../constants/sorting';
+
 export type SearchParams = {
     filter: string;
-    isSortedDesc: boolean;
+    sortCriteria: Sorting[];
+    sortCriteriaForRequest: Sorting[];
+    bookingFree: boolean;
 };

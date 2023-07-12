@@ -101,7 +101,9 @@ export const booksSlice = createSlice({
         bookListRequestClean: (state) => {
             state.bookList.data = null;
         },
-
+        bookListSetData: (state, action: PayloadAction<BookListItem[]>) => {
+            state.bookList.data = action.payload;
+        },
         bookRequest: (state, action: PayloadAction<string | number>) => {
             state.book.isLoading = true;
         },
@@ -266,6 +268,7 @@ export const {
     bookingRequest,
     bookingRequestSuccess,
     bookingRequestFailure,
+    bookListSetData,
     bookingUpdateRequest,
     bookingDeleteRequest,
     bookingReset,

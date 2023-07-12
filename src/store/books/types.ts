@@ -60,6 +60,8 @@ export type BookListItem = {
         order: boolean;
         dateOrder: string;
         customerId: number;
+        customerFirstName: string;
+        customerLastName: string;
     };
     delivery: {
         id: number;
@@ -79,6 +81,7 @@ export type BookListItem = {
 export type BookListPaginationPayload = {
     pageNumber: number;
     category: string;
+    sortingCriteria: string;
 };
 
 export type BookDataType = {
