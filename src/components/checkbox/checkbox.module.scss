@@ -1,0 +1,46 @@
+.CheckBoxContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.CheckBoxInput {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #a7a7a7;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.CheckBoxInput:checked {
+    border: none;
+    background-image: url('./assets/checkbox-background.svg');
+    background-position: center;
+    background-size: cover;
+}
+
+.CheckBoxLabel {
+    font-size: var(--fontsize-nav-m);
+    line-height: 16px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+}
+
+@media (max-width: 370px) {
+    .CheckBoxInput {
+        width: 16px;
+        height: 16px;
+    }
+
+    .CheckBoxLabel {
+        font-size: 12px;
+        font-weight: 400;
+    }
+}

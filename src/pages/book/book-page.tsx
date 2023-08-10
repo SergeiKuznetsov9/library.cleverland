@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import SwiperCore, { FreeMode, Pagination, Thumbs } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import IconPlugImg from '../../assets/img/icon-plug-img.svg';
 import { BookingButton } from '../../components/booking-button';
 import { Button } from '../../components/button';
 import { Comment } from '../../components/comment';
@@ -25,7 +26,6 @@ import { getUserSelector } from '../../store/user/selectors';
 import { deleteToast } from '../../store/view';
 
 import arrowBottomBlack from './assets/arrow-bottom-black.svg';
-import IconPlugImg from './assets/icon-plug-img.svg';
 
 import './swiper-book.css';
 import styles from './book-page.module.scss';

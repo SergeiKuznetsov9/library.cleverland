@@ -1,0 +1,165 @@
+.card {
+    display: grid;
+    box-shadow: var(--box-shadow-button);
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 16px;
+    column-gap: 16px;
+    grid-template-columns: 120px 1fr;
+    grid-template-rows: 1fr max-content max-content;
+    align-content: start;
+    cursor: pointer;
+    width: 99.3%;
+}
+
+.imgBlock {
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+}
+
+.imgContainer {
+    width: 120px;
+    border-radius: 3px;
+    border: 1px solid var(--subtitle);
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        border-radius: 3px;
+    }
+}
+
+.titleBlock {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    font-weight: 700;
+    font-size: var(--fontsize-m);
+    line-height: 28px;
+    letter-spacing: 0.1px;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.holderBlock {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.holderLabel {
+    color: var(--subtitle);
+    font-size: var(--fontsize-nav-m);
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.holderName {
+    background-color: #f83600;
+    background-image: var(--primary-background);
+    background-clip: inherit;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.statusWithButtonsBlock {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.status {
+    padding-top: 8px;
+    font-size: var(--fontsize-s);
+    line-height: 24px;
+    color: var(--subtitle);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.statusInfo {
+    color: var(--color-black);
+}
+
+.buttons {
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-grow: 1;
+    gap: 24px;
+}
+
+@media (max-width: 860px) {
+    .buttons {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 584px) {
+    .card {
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content max-content max-content max-content max-content;
+    }
+
+    .imgBlock {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        margin-bottom: 24px;
+
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+    }
+
+    .imgContainer {
+        width: 174px;
+        min-height: 242px;
+        margin: 0 auto;
+        border-radius: 10px;
+    }
+
+    .titleBlock {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 16px;
+    }
+
+    .holderBlock {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+        font-size: var(--fontsize-s);
+        margin-bottom: 12px;
+    }
+
+    .statusWithButtonsBlock {
+        grid-column: 1 / 2;
+        grid-row: 4 / 6;
+        flex-direction: column;
+    }
+
+    .status {
+        padding-top: 0;
+        margin-bottom: 24px;
+        font-size: 15px;
+    }
+
+    .buttons {
+        padding: 0;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    button.cardButton {
+        width: 100%;
+        height: 40px;
+        font-size: 12px;
+    }
+}

@@ -6,6 +6,7 @@ import { getBookList } from '../../store/books/selectors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setBookingFree } from '../../store/search';
 import { Button } from '../button';
+import { Checkbox } from '../checkbox';
 import { Search } from '../search';
 
 import displayList from './assets/icon-line.svg';
@@ -70,16 +71,11 @@ export const Menu = ({ menuView, setMenuView }: MenyProps) => {
                     </div>
 
                     <div ref={bookingViewElems} className={classNames(styles.display)}>
-                        <label className={styles.bookingContainer}>
-                            <input
-                                type='checkbox'
-                                className={styles.bookingCheckbox}
-                                checked={isChecked}
-                                onChange={handleCheckboxChange}
-                            />
-                            <span className={styles.bookingLabel}>Скрыть бронь</span>
-                        </label>
-
+                        <Checkbox
+                            status={isChecked}
+                            onToggle={handleCheckboxChange}
+                            label='Скрыть бронь'
+                        />
                         <Button
                             classButton={styles.buttonDisplay}
                             onClick={() => {

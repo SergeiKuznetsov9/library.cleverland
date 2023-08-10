@@ -1,0 +1,52 @@
+.navLink {
+    font-size: var(--fontsize-nav-l);
+    font-weight: 700;
+    line-height: 28px;
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    text-align: left;
+    color: var(--color-black);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.navLink:hover {
+    transition: color 0.2s linear;
+    color: #ff5253;
+}
+
+.navLinkActive {
+    background-image: var(--primary-background);
+    background-clip: inherit;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.checkBoxesForBooksWrapper {
+    overflow: hidden;
+    height: 96px;
+    transition: height, 0.3s ease;
+}
+
+.checkBoxesForUsersWrapper {
+    overflow: hidden;
+    height: 144px;
+    transition: height, 0.3s ease;
+}
+
+.checkBoxesWrapperHidden {
+    height: 0px;
+    transition: height, 0.3s ease;
+}
+
+.listItem {
+    margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+    .Navigation {
+        min-height: 248px;
+    }
+}

@@ -45,6 +45,25 @@ export type BooksType = {
     };
 };
 
+export type Booking = {
+    id: number;
+    order: boolean;
+    dateOrder: string;
+    customerId: number;
+    customerFirstName: string;
+    customerLastName: string;
+};
+
+export type Delivery = {
+    id: number;
+    handed: boolean;
+    dateHandedFrom: string;
+    dateHandedTo: string;
+    recipientId: number;
+    recipientFirstName?: string;
+    recipientLastName?: string;
+};
+
 export type BookListItem = {
     issueYear: string;
     rating: number;
@@ -55,21 +74,8 @@ export type BookListItem = {
     };
     categories: string[];
     id: number;
-    booking: {
-        id: number;
-        order: boolean;
-        dateOrder: string;
-        customerId: number;
-        customerFirstName: string;
-        customerLastName: string;
-    };
-    delivery: {
-        id: number;
-        handed: boolean;
-        dateHandedFrom: string;
-        dateHandedTo: string;
-        recipientId: number;
-    };
+    booking: Booking;
+    delivery: Delivery;
     histories: [
         {
             id: number;

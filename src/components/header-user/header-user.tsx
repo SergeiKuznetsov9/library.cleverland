@@ -40,6 +40,9 @@ export const HeaderUser = ({ userFirstName, avatar }: HeaderUserProps) => {
                 >
                     {NAV_MENU_MAIN.profile.name}
                 </Link>
+                <Link className={styles.popUpItem} to={ROUTES.admin}>
+                    {NAV_MENU_MAIN.admin.name}
+                </Link>
                 <button type='button' className={styles.popUpItem} onClick={logout}>
                     {NAV_MENU_MAIN.exit.name}
                 </button>

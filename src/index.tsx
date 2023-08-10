@@ -8,7 +8,9 @@ import { RegisterForm } from './components/forms/register-form';
 import { Layout } from './components/layout';
 import { LayoutMainPage } from './components/layout-main-page';
 import { ROUTES } from './constants/routes';
+import { AdminRoute } from './middlewares/admin-route';
 import { ProtectedRoute } from './middlewares/protected-route';
+import { AdminPage } from './pages/admin';
 import { Auth } from './pages/auth';
 import { BookPage } from './pages/book';
 import { MainPage } from './pages/main';
@@ -48,6 +50,13 @@ root.render(
                                 path={ROUTES.contract}
                                 element={<Terms contentView='contract' />}
                             />
+                            <Route element={<AdminRoute />}>
+                                <Route
+                                    path={ROUTES.admin}
+                                    element={<Navigate to={ROUTES.adminBooks} />}
+                                />
+                                <Route path={ROUTES.adminParagraph} element={<AdminPage />} />
+                            </Route>
                         </Route>
                         <Route path={ROUTES.bookDetail} element={<BookPage />} />
                         <Route path={ROUTES.profile} element={<ProfilePage />} />
