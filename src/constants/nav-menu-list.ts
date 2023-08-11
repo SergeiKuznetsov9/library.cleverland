@@ -21,6 +21,10 @@ export const NAV_MENU_MAIN = {
         name: 'Профиль',
         path: 'profile',
     },
+    admin: {
+        name: 'Администрирование',
+        path: 'admin',
+    },
     exit: {
         name: 'Выход',
         path: 'auth',

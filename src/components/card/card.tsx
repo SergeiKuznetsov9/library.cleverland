@@ -2,6 +2,7 @@ import { SyntheticEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
+import IconPlugImg from '../../assets/img/icon-plug-img.svg';
 import { MenuViewEnum } from '../../constants/menu-view';
 import { NAV_MENU_ALL, NAV_MENU_MAIN } from '../../constants/nav-menu-list';
 import { bookingDeleteRequest, toggleBookReviewModal } from '../../store/books';
@@ -14,8 +15,6 @@ import { highlightMatches } from '../../utils/highlight-matches';
 import { BookingButton } from '../booking-button';
 import { Button } from '../button';
 import { Rating } from '../rating';
-
-import IconPlugImg from './assets/icon-plug-img.svg';
 
 import styles from './card.module.scss';
 
