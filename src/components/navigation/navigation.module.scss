@@ -4,7 +4,6 @@
     align-content: start;
     max-width: 255px;
     max-height: 768px;
-    margin-bottom: 202px;
 }
 
 .books {
@@ -152,7 +151,4 @@
     row-gap: 22px;
     margin: 42px 0;
     transition: all 0.4s linear;
-}
-
-@media (max-height: 1110px) {
 }

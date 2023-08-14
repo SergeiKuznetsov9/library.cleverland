@@ -1,0 +1,85 @@
+.container {
+    position: relative;
+    width: 274px;
+    transition: all 0.2s linear;
+}
+
+.input {
+    width: 100%;
+    height: 38px;
+    background-color: var(--background-main);
+    box-shadow: none;
+    border: 1px solid #e3e3e3;
+    border-radius: 20px;
+    padding-left: 40px;
+    transition: all 0.2s linear;
+}
+
+.input:hover {
+    box-shadow: var(--box-shadow-button-menu-hover);
+}
+
+.input:focus {
+    outline: none;
+    caret-color: #f83600;
+}
+
+.iconSearchColor,
+.iconSearch {
+    position: absolute;
+    left: 16px;
+    top: 11px;
+    width: 16px;
+    height: 16px;
+}
+
+.iconSearchColor,
+.input:focus ~ .iconSearch {
+    display: none;
+}
+
+.input:focus ~ .iconSearchColor {
+    display: block;
+}
+
+.input::placeholder {
+    color: var(--subtitle);
+}
+
+button.mobileButton {
+    display: none;
+}
+
+.closeButton {
+    background-color: inherit;
+    width: 16px;
+    height: 16px;
+    border: none;
+    right: 16px;
+    top: 11px;
+    cursor: pointer;
+    position: absolute;
+    display: none;
+}
+
+@media (max-width: 824px) {
+    .container {
+        width: 230px;
+    }
+}
+
+@media (max-width: 584px) {
+    button.mobileButton {
+        display: block;
+        width: 38px;
+        line-height: 10px;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .closeButton {
+        display: block;
+    }
+}

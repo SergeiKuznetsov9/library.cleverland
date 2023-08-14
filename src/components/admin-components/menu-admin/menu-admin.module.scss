@@ -1,0 +1,12 @@
+.SearchingBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 584px) {
+    .SearchingBar {
+        justify-content: flex-start;
+        gap: 16px;
+    }
+}

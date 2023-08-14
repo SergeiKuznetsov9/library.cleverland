@@ -48,7 +48,11 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
                         : HEADER_TITLE[path as keyof typeof HEADER_TITLE]}
                 </h2>
             </div>
-            <HeaderUser avatar={avatar} userFirstName={userFirstName} />
+            <HeaderUser
+                avatar={avatar}
+                userFirstName={userFirstName}
+                className={styles.hideUserMenu}
+            />
         </header>
     );
 };

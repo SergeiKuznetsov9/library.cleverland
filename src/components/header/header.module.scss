@@ -59,6 +59,10 @@
         right: 0;
         z-index: 1;
     }
+
+    div.hideUserMenu {
+        display: none;
+    }
 }
 
 @media (max-width: 600px) {

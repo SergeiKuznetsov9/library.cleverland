@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { NavigationAdmin } from '../admin-components/navigation-admin';
 import { Navigation } from '../navigation';
-import { NavigationAdmin } from '../navigation-admin';
 
 import styles from './layout-main-page.module.scss';
 
 export const LayoutMainPage = () => {
-    const { pathname } = useLocation();
+    const { pathname } = useLocation(); // TODO CustomHook, проверку роли
     const [isAdminNav, setIsAdminNav] = useState(pathname.includes('admin'));
 
     useEffect(() => {
         if (pathname.includes('admin')) {
-            // добавить проверку роли
             setIsAdminNav(true);
         } else {
             setIsAdminNav(false);

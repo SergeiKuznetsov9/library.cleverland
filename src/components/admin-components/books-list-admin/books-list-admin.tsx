@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { bookListRequest, bookListRequestClean } from '../../../store/books';
 import { getBookList } from '../../../store/books/selectors';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { BookCardAdmin } from '../book-card-admin';
+import { MenuAdmin } from '../menu-admin/menu-admin';
 
 import styles from './books-list-admin.module.scss';
 
@@ -23,8 +24,21 @@ export const BooksListAdmin = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleSearchInput = (value: string) => {
+        console.log('books', value);
+    };
+
+    const handleSortDirection = (value: boolean) => {
+        console.log('books', value);
+    };
+
     return (
         <section className={styles.adminPage}>
+            <MenuAdmin
+                className={styles.menu}
+                handleSearchInput={handleSearchInput}
+                handleSortDirection={handleSortDirection}
+            />
             {bookList?.map((book) => (
                 <BookCardAdmin
                     key={book.id}

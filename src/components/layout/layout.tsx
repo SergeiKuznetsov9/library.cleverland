@@ -8,6 +8,7 @@ import {
     getIsLoadingBooksRequests,
     getLoadingBooksList,
 } from '../../store/books/selectors';
+import { getClientsListIsLoading } from '../../store/clients/selectors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { authenticatedUserRequest } from '../../store/user';
 import { getUserSelector } from '../../store/user/selectors';
@@ -35,6 +36,7 @@ export const Layout = () => {
 
     const isLoadingBooksRequests = useSelector(getIsLoadingBooksRequests);
     const isLoadingBooksList = useSelector(getLoadingBooksList);
+    const isLoadingClientsList = useSelector(getClientsListIsLoading);
     const { isLoading: isLoadingBooking } = useSelector(bookingSelector);
     const toasts = useSelector(getToasts);
 
@@ -51,7 +53,10 @@ export const Layout = () => {
             />
             <Outlet />
             <Footer />
-            {(isLoadingBooksRequests || isLoadingBooksList || isLoadingBooking) && <Loader />}
+            {(isLoadingBooksRequests ||
+                isLoadingBooksList ||
+                isLoadingClientsList ||
+                isLoadingBooking) && <Loader />}
             {toasts.length > 0 && (
                 <div className={styles.toastsWrapper}>
                     {toasts.map(({ text, type }) => (
