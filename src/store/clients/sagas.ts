@@ -1,11 +1,19 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 
 import { axiosInstance } from '../../api/axios';
 import { CLIENTS_URL } from '../../constants/api';
 
-import { ClientsListItem } from './types';
-import { clientsListRequest, clientsListRequestFailure, clientsListRequestSuccess } from '.';
+import { ClientData, ClientsListItem } from './types';
+import {
+    clientRequest,
+    clientRequestFailure,
+    clientRequestSuccess,
+    clientsListRequest,
+    clientsListRequestFailure,
+    clientsListRequestSuccess,
+} from '.';
 
 function* clientsListRequestWorker() {
     try {
@@ -20,6 +28,23 @@ function* clientsListRequestWorker() {
     }
 }
 
+function* clientRequestWorker({ payload }: PayloadAction<string>) {
+    try {
+        const response: AxiosResponse<ClientData> = yield call(
+            axiosInstance.get,
+            `${CLIENTS_URL.clients}/${payload}`,
+        );
+
+        yield put(clientRequestSuccess(response.data));
+    } catch {
+        yield put(clientRequestFailure());
+    }
+}
+
 export function* watchClientListRequest() {
     yield takeLatest(clientsListRequest, clientsListRequestWorker);
+}
+
+export function* watchClientRequest() {
+    yield takeLatest(clientRequest, clientRequestWorker);
 }

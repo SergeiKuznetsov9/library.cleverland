@@ -1,0 +1,23 @@
+.header {
+    font-size: var(--fontsize-l);
+    line-height: 30px;
+}
+
+.marginBetweenHeader {
+    margin-top: 32px;
+}
+
+.swiper {
+    padding-left: 3px;
+    margin-right: -6px;
+}
+
+.slide {
+    width: auto;
+}
+
+@media (max-width: 448px) {
+    .header {
+        font-size: var(--fontsize-m);
+    }
+}

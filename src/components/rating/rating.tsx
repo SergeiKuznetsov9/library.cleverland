@@ -9,11 +9,18 @@ import styles from './rating.module.scss';
 type RatingType = {
     rating: number;
     classNameStar?: string;
+    classNameButton?: string;
     isEditable?: boolean;
     setValue?: UseFormSetValue<any>;
 };
 
-export const Rating = ({ rating, classNameStar, isEditable, setValue }: RatingType) => {
+export const Rating = ({
+    rating,
+    classNameStar,
+    classNameButton,
+    isEditable,
+    setValue,
+}: RatingType) => {
     const [starState, setStarState] = useState(1);
     const [starHover, setStarHover] = useState<number | undefined>(undefined);
 
@@ -45,7 +52,7 @@ export const Rating = ({ rating, classNameStar, isEditable, setValue }: RatingTy
                     type='button'
                     // eslint-disable-next-line react/no-array-index-key
                     key={ind}
-                    className={styles.starWrapper}
+                    className={classNames(styles.starWrapper, classNameButton)}
                     {...editProps(ind)}
                     data-test-id='star'
                 >

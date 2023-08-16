@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { clientsListRequest, clientsListRequestClean } from '../../../store/clients';
 import { getClientsList } from '../../../store/clients/selectors';
@@ -40,21 +41,24 @@ export const ClientsListAdmin = () => {
                 handleSearchInput={handleSearchInput}
                 handleSortDirection={handleSortDirection}
             />
-            {clientsList?.map((client) => (
-                <ClientCardAdmin
-                    key={client.id}
-                    className={styles.clientCard}
-                    avatar={client.avatar}
-                    firstName={client.firstName}
-                    lastName={client.lastName}
-                    username={client.username}
-                    historyCount={client.historyCount}
-                    createdAt={client.createdAt}
-                    phone={client.phone}
-                    blocked={client.blocked}
-                    delivery={client.delivery}
-                />
-            ))}
+            <ul>
+                {clientsList?.map((client) => (
+                    <Link key={client.id} to={`${client.id}`}>
+                        <ClientCardAdmin
+                            className={styles.clientCard}
+                            avatar={client.avatar}
+                            firstName={client.firstName}
+                            lastName={client.lastName}
+                            username={client.username}
+                            historyCount={client.historyCount}
+                            createdAt={client.createdAt}
+                            phone={client.phone}
+                            blocked={client.blocked}
+                            delivery={client.delivery}
+                        />
+                    </Link>
+                ))}
+            </ul>
         </section>
     );
 };

@@ -11,6 +11,7 @@ import { ROUTES } from './constants/routes';
 import { AdminRoute } from './middlewares/admin-route';
 import { ProtectedRoute } from './middlewares/protected-route';
 import { AdminPage } from './pages/admin';
+import { AdminUserInfo } from './pages/admin-user-info';
 import { Auth } from './pages/auth';
 import { BookPage } from './pages/book';
 import { MainPage } from './pages/main';
@@ -58,6 +59,7 @@ root.render(
                                 <Route path={ROUTES.adminParagraph} element={<AdminPage />} />
                             </Route>
                         </Route>
+                        <Route path={ROUTES.adminUser} element={<AdminUserInfo />} />
                         <Route path={ROUTES.bookDetail} element={<BookPage />} />
                         <Route path={ROUTES.profile} element={<ProfilePage />} />
                     </Route>

@@ -43,7 +43,7 @@ export const clientsSlice = createSlice({
         clientsListRequestClean: (state) => {
             state.clientsList.data = null;
         },
-        clientRequest: (state, action: PayloadAction<string | number>) => {
+        clientRequest: (state, action: PayloadAction<string>) => {
             state.client.isLoading = true;
         },
         clientRequestSuccess: (state, action: PayloadAction<ClientData>) => {
