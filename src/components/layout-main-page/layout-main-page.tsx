@@ -24,7 +24,7 @@ export const LayoutMainPage = () => {
     return (
         <div className={styles.layoutMainPage}>
             <div className={styles.navigation}>
-                {isAdminNav && role.type === 'admin' ? (
+                {isAdminNav && role?.type === 'admin' ? (
                     <NavigationAdmin />
                 ) : (
                     <Navigation dataTestid='navigation' />
