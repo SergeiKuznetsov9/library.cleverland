@@ -59,7 +59,9 @@ root.render(
                                 <Route path={ROUTES.adminParagraph} element={<AdminPage />} />
                             </Route>
                         </Route>
-                        <Route path={ROUTES.adminUser} element={<AdminUserInfo />} />
+                        <Route element={<AdminRoute />}>
+                            <Route path={ROUTES.adminUser} element={<AdminUserInfo />} />
+                        </Route>
                         <Route path={ROUTES.bookDetail} element={<BookPage />} />
                         <Route path={ROUTES.profile} element={<ProfilePage />} />
                     </Route>
