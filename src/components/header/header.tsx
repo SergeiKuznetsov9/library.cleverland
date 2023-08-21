@@ -55,7 +55,7 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
                             / <span>Пользователь</span>
                         </React.Fragment>
                     ) : (
-                        headerTitle(path, role.type)
+                        headerTitle(path, role?.type)
                     )}
                 </h2>
                 <HeaderUser
