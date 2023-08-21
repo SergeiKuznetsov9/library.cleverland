@@ -5,8 +5,8 @@ export enum AdminParagraphs {
 
 export enum BooksFilters {
     UNSET = 'unset',
-    BOOKED = 'booked',
-    ISSUED = 'issued',
+    IS_BOOKED = 'isBooked',
+    IS_ISSUED = 'isIssued',
 }
 
 export enum UsersFilters {

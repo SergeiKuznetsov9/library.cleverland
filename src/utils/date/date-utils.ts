@@ -4,7 +4,7 @@ export const formatDate = (stringDate: string) =>
 export const formatDateToDDMMYYYY = (stringDate: string): string => {
     const dateObject = new Date(stringDate);
     const day = dateObject.getUTCDate();
-    const month = dateObject.getUTCMonth() + 1; // Месяцы в объекте Date нумеруются с 0, поэтому добавляем 1
+    const month = dateObject.getUTCMonth() + 1;
     const year = dateObject.getUTCFullYear();
 
     return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}.${year}`;
@@ -13,7 +13,7 @@ export const formatDateToDDMMYYYY = (stringDate: string): string => {
 export const formatDateToDDMM = (stringDate: string): string => {
     const dateObject = new Date(stringDate);
     const day = dateObject.getUTCDate();
-    const month = dateObject.getUTCMonth() + 1; // Месяцы в объекте Date нумеруются с 0, поэтому добавляем 1
+    const month = dateObject.getUTCMonth() + 1;
 
     return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
 };

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Sorting } from '../../constants/sorting';
 
-import { BooksFilteringPayload, ClientsFilteringPayload, SearchParams } from './types';
+import { BooksFiltersType, ClientsFilteringPayload, SearchParams } from './types';
 
 export const initialState: SearchParams = {
     filter: '',
@@ -15,9 +15,10 @@ export const initialState: SearchParams = {
         blocked: false,
     },
     booksFilters: {
-        booked: false,
-        issued: false,
+        isBooked: false,
+        isIssued: false,
     },
+    isBooksOrderAsc: true,
 };
 
 export const searchSlice = createSlice({
@@ -39,8 +40,11 @@ export const searchSlice = createSlice({
         setClientsFilter: (state, action: PayloadAction<ClientsFilteringPayload>) => {
             state.clientsFilters[action.payload.filterName] = action.payload.filterValue;
         },
-        setBooksFilter: (state, action: PayloadAction<BooksFilteringPayload>) => {
-            state.booksFilters[action.payload.filterName] = action.payload.filterValue;
+        setBooksFilter: (state, action: PayloadAction<BooksFiltersType>) => {
+            state.booksFilters = action.payload;
+        },
+        setBooksOrderAsc: (state, action: PayloadAction<boolean>) => {
+            state.isBooksOrderAsc = action.payload;
         },
     },
 });
@@ -52,4 +56,5 @@ export const {
     setBookingFree,
     setClientsFilter,
     setBooksFilter,
+    setBooksOrderAsc,
 } = searchSlice.actions;

@@ -9,12 +9,18 @@ import iconSearchColor from '../assets/icon-search-color.svg';
 import styles from './searching-input.module.scss';
 
 type SearchProps = {
+    searchValue?: string;
     hideSorting: () => void;
     showSorting: () => void;
     handleInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const SearchingInput: FC<SearchProps> = ({ hideSorting, showSorting, handleInput }) => {
+export const SearchingInput: FC<SearchProps> = ({
+    hideSorting,
+    showSorting,
+    handleInput,
+    searchValue,
+}) => {
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const inputContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,6 +55,7 @@ export const SearchingInput: FC<SearchProps> = ({ hideSorting, showSorting, hand
                     className={styles.input}
                     placeholder='Поиск книги или автора…'
                     onChange={handleInput}
+                    value={searchValue}
                 />
                 <img src={iconSearch} alt='close' className={styles.iconSearch} />
                 <img src={iconSearchColor} alt='close' className={styles.iconSearchColor} />

@@ -1,13 +1,14 @@
 import { NavLink, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
+import { bookListRequestClean } from '../../../store/books';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setBooksFilter, setClientsFilter } from '../../../store/search';
 import {
     booksFilterStatusSelector,
     clientsFilterStatusSelector,
 } from '../../../store/search/selectors';
-import { BooksFilterKeys, ClientsFilterKeys } from '../../../store/search/types';
+import { BooksFiltersType, ClientsFilterKeys } from '../../../store/search/types';
 import { Checkbox } from '../../checkbox';
 
 import {
@@ -28,14 +29,15 @@ export const NavigationAdmin = ({ className, onClickItemMenu }: NavigationAdminP
     const { paragraph } = useParams();
     const dispatch = useAppDispatch();
     const { all, holders, blocked } = useAppSelector(clientsFilterStatusSelector);
-    const { booked, issued } = useAppSelector(booksFilterStatusSelector);
+    const { isBooked, isIssued } = useAppSelector(booksFilterStatusSelector);
     const { books, users } = NavigationItems;
 
-    const onToggleBooksFilter = (filterName: BooksFilterKeys, filterValue: boolean) => {
-        dispatch(setBooksFilter({ filterName, filterValue }));
+    const onToggleBooksFilter = (payload: BooksFiltersType) => {
+        dispatch(bookListRequestClean());
+        dispatch(setBooksFilter(payload));
     };
 
-    const onToggleClientssFilter = (filterName: ClientsFilterKeys, filterValue: boolean) => {
+    const onToggleClientsFilter = (filterName: ClientsFilterKeys, filterValue: boolean) => {
         dispatch(setClientsFilter({ filterName, filterValue }));
     };
 
@@ -59,15 +61,25 @@ export const NavigationAdmin = ({ className, onClickItemMenu }: NavigationAdminP
                     <li className={styles.listItem}>
                         <Checkbox
                             label={books.checkBoxes.booked}
-                            onToggle={() => onToggleBooksFilter(BooksFilters.BOOKED, !booked)}
-                            status={booked}
+                            onToggle={() =>
+                                onToggleBooksFilter({
+                                    [BooksFilters.IS_BOOKED]: !isBooked,
+                                    [BooksFilters.IS_ISSUED]: false,
+                                })
+                            }
+                            status={isBooked}
                         />
                     </li>
                     <li className={styles.listItem}>
                         <Checkbox
                             label={books.checkBoxes.issued}
-                            onToggle={() => onToggleBooksFilter(BooksFilters.ISSUED, !issued)}
-                            status={issued}
+                            onToggle={() =>
+                                onToggleBooksFilter({
+                                    [BooksFilters.IS_ISSUED]: !isIssued,
+                                    [BooksFilters.IS_BOOKED]: false,
+                                })
+                            }
+                            status={isIssued}
                         />
                     </li>
                 </ul>
@@ -90,21 +102,21 @@ export const NavigationAdmin = ({ className, onClickItemMenu }: NavigationAdminP
                     <li className={styles.listItem}>
                         <Checkbox
                             label={users.checkBoxes.all}
-                            onToggle={() => onToggleClientssFilter(UsersFilters.ALL, !all)}
+                            onToggle={() => onToggleClientsFilter(UsersFilters.ALL, !all)}
                             status={all}
                         />
                     </li>
                     <li className={styles.listItem}>
                         <Checkbox
                             label={users.checkBoxes.holders}
-                            onToggle={() => onToggleClientssFilter(UsersFilters.HOLDERS, !holders)}
+                            onToggle={() => onToggleClientsFilter(UsersFilters.HOLDERS, !holders)}
                             status={holders}
                         />
                     </li>
                     <li className={styles.listItem}>
                         <Checkbox
                             label={users.checkBoxes.blocked}
-                            onToggle={() => onToggleClientssFilter(UsersFilters.BLOCKED, !blocked)}
+                            onToggle={() => onToggleClientsFilter(UsersFilters.BLOCKED, !blocked)}
                             status={blocked}
                         />
                     </li>

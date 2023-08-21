@@ -8,17 +8,12 @@ type ClientsFilters = {
 
 export type ClientsFilterKeys = keyof ClientsFilters;
 
-type BooksFilters = {
-    booked: boolean;
-    issued: boolean;
+export type BooksFiltersType = {
+    isBooked: boolean;
+    isIssued: boolean;
 };
 
-export type BooksFilterKeys = keyof BooksFilters;
-
-export type BooksFilteringPayload = {
-    filterName: BooksFilterKeys;
-    filterValue: boolean;
-};
+export type BooksFilterKeys = keyof BooksFiltersType;
 
 export type ClientsFilteringPayload = {
     filterName: ClientsFilterKeys;
@@ -31,5 +26,6 @@ export type SearchParams = {
     sortCriteriaForRequest: Sorting[];
     bookingFree: boolean;
     clientsFilters: ClientsFilters;
-    booksFilters: BooksFilters;
+    booksFilters: BooksFiltersType;
+    isBooksOrderAsc: boolean;
 };

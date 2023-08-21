@@ -86,8 +86,27 @@ export type BookListItem = {
 
 export type BookListPaginationPayload = {
     pageNumber: number;
-    category: string;
-    sortingCriteria: string;
+    category?: string;
+    sortingCriteria?: {
+        'sort[0]'?: string;
+        'sort[1]'?: string;
+        'sort[2]'?: string;
+    };
+    isBooked?: boolean;
+    isIssued?: boolean;
+    isBooksOrderAsc?: boolean;
+};
+
+export type GetBooksQueryParams = {
+    'pagination[page]': string;
+    'pagination[pageSize]': string;
+    'filters[categories][path][$eq]'?: string;
+    'filters[booking][id][$notNull]'?: string;
+    'filters[delivery][id][$notNull]'?: string;
+    'sort[0]'?: string;
+    'sort[1]'?: string;
+    'sort[2]'?: string;
+    sort?: string;
 };
 
 export type BookDataType = {

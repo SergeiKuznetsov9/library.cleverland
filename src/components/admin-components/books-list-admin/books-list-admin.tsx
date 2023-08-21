@@ -1,36 +1,83 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { bookListRequest, bookListRequestClean } from '../../../store/books';
-import { getBookList } from '../../../store/books/selectors';
+import { useInfiniteScroll } from '../../../hooks/use-infinite-scroll';
+import {
+    bookListRequestAllDownloaded,
+    bookListRequestClean,
+    bookListRequestWithPagination,
+} from '../../../store/books';
+import { getBookList, getIsAllBooksListDownloaded } from '../../../store/books/selectors';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { setBooksOrderAsc } from '../../../store/search';
+import { booksFilterStatusSelector, booksOrder } from '../../../store/search/selectors';
 import { BookCardAdmin } from '../book-card-admin';
 import { MenuAdmin } from '../menu-admin/menu-admin';
 
 import styles from './books-list-admin.module.scss';
 
 export const BooksListAdmin = () => {
-    const bookList = useAppSelector(getBookList);
     const dispatch = useAppDispatch();
+    const [searchValue, setSearchValue] = useState('');
+    const bookList = useAppSelector(getBookList);
+    const isAllBooksListDownloaded = useAppSelector(getIsAllBooksListDownloaded);
+    const { isBooked, isIssued } = useAppSelector(booksFilterStatusSelector);
+    const isBooksOrderAsc = useSelector(booksOrder);
 
-    const getBooksByPagination = () => {
-        dispatch(bookListRequest());
+    const [pageNumber, setPageNumber] = useState(1);
+    const [lastHTMLElement, setLastHTMLElement] = useState<HTMLLIElement | null>(null);
+
+    const setRef = (HTMLElement: HTMLLIElement) => {
+        setLastHTMLElement(HTMLElement);
     };
 
-    useEffect((): (() => void) => {
-        getBooksByPagination();
+    const handleIntersection = useCallback(() => {
+        if (!isAllBooksListDownloaded) setPageNumber((currentPage) => currentPage + 1);
+    }, [isAllBooksListDownloaded]);
 
-        return () => dispatch(bookListRequestClean());
+    useInfiniteScroll({
+        triggerRef: lastHTMLElement,
+        callback: handleIntersection,
+    });
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const getBooksByPagination = () => {
+        dispatch(
+            bookListRequestWithPagination({
+                pageNumber,
+                isBooked,
+                isIssued,
+                isBooksOrderAsc,
+            }),
+        );
+    };
 
     const handleSearchInput = (value: string) => {
-        console.log('books', value);
+        setSearchValue(value);
     };
 
     const handleSortDirection = (value: boolean) => {
-        console.log('books', value);
+        dispatch(setBooksOrderAsc(value ? true : false));
     };
+
+    useEffect(() => {
+        dispatch(bookListRequestClean());
+        dispatch(bookListRequestAllDownloaded(false));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        getBooksByPagination();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageNumber]);
+
+    useEffect(() => {
+        if (pageNumber === 1) {
+            getBooksByPagination();
+        } else {
+            setPageNumber(1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isBooked, isIssued, isBooksOrderAsc]);
 
     return (
         <section className={styles.adminPage}>
@@ -38,17 +85,21 @@ export const BooksListAdmin = () => {
                 className={styles.menu}
                 handleSearchInput={handleSearchInput}
                 handleSortDirection={handleSortDirection}
+                searchValue={searchValue}
             />
-            {bookList?.map((book) => (
-                <BookCardAdmin
-                    key={book.id}
-                    className={styles.bookCard}
-                    image={book.image}
-                    title={book.title}
-                    booking={book.booking}
-                    delivery={book.delivery}
-                />
-            ))}
+            <ul>
+                {bookList?.map((book, index) => (
+                    <BookCardAdmin
+                        key={book.id}
+                        className={styles.bookCard}
+                        image={book.image}
+                        title={book.title}
+                        booking={book.booking}
+                        delivery={book.delivery}
+                        ref={index === bookList.length - 1 ? setRef : null}
+                    />
+                ))}
+            </ul>
         </section>
     );
 };
