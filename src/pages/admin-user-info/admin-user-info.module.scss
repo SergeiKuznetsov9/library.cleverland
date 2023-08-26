@@ -1,0 +1,32 @@
+.AdminUserInfo {
+    padding-top: 48px;
+}
+
+.marginBetweenSections {
+    margin-top: 92px;
+}
+
+.marginForLastSections {
+    margin-top: 92px;
+    margin-bottom: 48px;
+}
+
+@media (max-width: 768px) {
+    .marginBetweenSections {
+        margin-top: 64px;
+    }
+
+    .marginForLastSections {
+        margin-top: 64px;
+    }
+}
+
+@media (max-width: 568px) {
+    .marginBetweenSections {
+        margin-top: 42px;
+    }
+
+    .marginForLastSections {
+        margin-top: 42px;
+    }
+}

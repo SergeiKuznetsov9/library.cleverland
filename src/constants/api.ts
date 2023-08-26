@@ -34,3 +34,7 @@ export const FILTERS = {
     categories: '&filters[categories][path][$eq]=',
     searchingByTitle: '&filters[title][$containsi]=',
 };
+
+export const CLIENTS_URL = {
+    clients: `${BASE_URL}/users`,
+};

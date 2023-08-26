@@ -3,7 +3,6 @@
 }
 
 .burgerMenuNav {
-    display: flex;
     padding: 32px 0 52px 32px;
     position: absolute;
     z-index: 2;
@@ -62,6 +61,15 @@
     margin-bottom: -1px;
 }
 
+.devider {
+    margin-left: -32px;
+    margin-top: 0;
+    border: none;
+    height: 1px;
+    background-color: hsla(210, 8%, 77%, 1);
+    width: 200%;
+}
+
 @media (max-width: 1000px) {
     .burgerMenu {
         display: grid;
@@ -103,6 +111,10 @@
 
     .burgerMenuLine {
         transform: translateX(-16px);
+    }
+
+    .devider {
+        margin-top: 16px;
     }
 }
 

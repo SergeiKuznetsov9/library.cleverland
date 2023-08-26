@@ -1,0 +1,15 @@
+.label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 584px) {
+    button.SortingButton {
+        width: 38px;
+    }
+
+    .labelText {
+        display: none;
+    }
+}

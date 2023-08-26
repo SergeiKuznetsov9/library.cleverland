@@ -1,0 +1,12 @@
+.BooksQuontity {
+    height: 32px;
+    background-color: #ebf9f1;
+    display: flex;
+    padding: 4px 12px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 16px;
+    width: fit-content;
+    font-weight: 600;
+    color: var(--color-grey);
+}

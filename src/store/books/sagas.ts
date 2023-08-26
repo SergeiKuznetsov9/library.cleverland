@@ -13,6 +13,7 @@ import { ERROR } from '../../constants/errors';
 import { NAV_MENU_ALL } from '../../constants/nav-menu-list';
 import { TOAST } from '../../constants/toast';
 import { MESSAGES } from '../../constants/toast-messages';
+import { createQueryParamsForGetBooks } from '../../utils/query-params-creators';
 import { authenticationSelector } from '../auth/selectors';
 import { addBookingUpdateUser, deleteBookingUpdateUser } from '../user';
 import { Comment, UserBooking } from '../user/types';
@@ -24,6 +25,7 @@ import {
     BookDataType,
     BookListItem,
     BookListPaginationPayload,
+    GetBooksQueryParams,
 } from './types';
 import {
     bookCategoriesFailure,
@@ -69,15 +71,13 @@ function* bookListRequestWorker() {
 function* bookListRequestWithPaginationWorker({
     payload,
 }: PayloadAction<BookListPaginationPayload>) {
-    const filter =
-        payload.category === NAV_MENU_ALL.category
-            ? ''
-            : `${FILTERS.categories}${payload.category}`;
+    const queryParams: GetBooksQueryParams = createQueryParamsForGetBooks(payload);
 
     try {
         const response: AxiosResponse<BookListItem[]> = yield call(
             axiosInstance.get,
-            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}`,
+            BOOKS_URL.list,
+            { params: queryParams },
         );
 
         yield put(bookListRequestWithPaginationSuccess(response.data));

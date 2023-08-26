@@ -109,6 +109,16 @@ select {
     }
 }
 
+@media (max-width: 584px) {
+    .displayNoneOn584 {
+        display: none;
+    }
+
+    .displayBlockOn584 {
+        display: block;
+    }
+}
+
 @media (max-width: 550px) {
     .noDisplayOn550 {
         display: none;

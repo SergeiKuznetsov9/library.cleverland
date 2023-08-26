@@ -8,7 +8,7 @@ type ButtonProps = {
     classButton?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     children?: ReactNode;
-    view?: 'primary' | 'secondary' | 'ghost';
+    view?: 'primary' | 'secondary' | 'ghost' | 'filter';
     type?: JSX.IntrinsicElements['button']['type'];
     dataTestId?: string;
 };

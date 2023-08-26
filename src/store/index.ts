@@ -5,6 +5,7 @@ import { createHashHistory } from 'history';
 
 import { authSlice } from './auth';
 import { booksSlice } from './books';
+import { clientsSlice } from './clients';
 import { rootSaga } from './saga';
 import { searchSlice } from './search';
 import { userSlice } from './user';
@@ -23,6 +24,7 @@ export const reducer = {
     view: viewSlice.reducer,
     auth: authSlice.reducer,
     user: userSlice.reducer,
+    clients: clientsSlice.reducer,
 };
 
 export const store = configureStore({

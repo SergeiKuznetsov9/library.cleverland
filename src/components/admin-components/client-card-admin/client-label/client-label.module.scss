@@ -1,0 +1,44 @@
+.UserLabel {
+    width: 80px;
+    height: 80px;
+    border-radius: 0px 12px 0px 60px;
+    padding: 6px 13.5px 18px 25.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: var(--background-main);
+    font-size: var(--fontsize-s);
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.mark {
+    width: 32px;
+    height: 32px;
+}
+
+.warning {
+    background-color: #ff5253;
+}
+
+.primary {
+    background-color: #00ca71;
+}
+
+@media (max-width: 584px) {
+    .UserLabel {
+        width: 54px;
+        height: 54px;
+        font-size: 14px;
+        line-height: 18px;
+        padding-bottom: 14px;
+        border-radius: 0px 12px 0px 32px;
+        padding: 8px 8px 12px 11px;
+    }
+
+    .mark {
+        width: 16px;
+        height: 16px;
+    }
+}

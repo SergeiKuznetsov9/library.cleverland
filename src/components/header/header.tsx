@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { HEADER_TITLE } from '../../constants/location';
 import { bookCategoriesRequest } from '../../store/books';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { searchbookList } from '../../store/search';
+import { getUserFullInfoSelector } from '../../store/user/selectors';
+import { headerTitle } from '../../utils/header-title';
 import { BurgerMenu } from '../burger-menu';
 import { HeaderUser } from '../header-user';
 
+import homeLogo from './assets/home.svg';
 import logo from './assets/logo.svg';
 
 import styles from './header.module.scss';
@@ -20,6 +22,7 @@ type HeaderPropsType = {
 
 export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
     const dispatch = useAppDispatch();
+    const { role } = useAppSelector(getUserFullInfoSelector);
 
     useEffect(() => {
         dispatch(bookCategoriesRequest());
@@ -43,12 +46,24 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
 
             <div className={styles.block}>
                 <h2 className={styles.title}>
-                    {path.includes('all')
-                        ? HEADER_TITLE.library
-                        : HEADER_TITLE[path as keyof typeof HEADER_TITLE]}
+                    {/^admin\/users\/\d+$/.test(path) && role.type === 'admin' ? (
+                        <React.Fragment>
+                            <Link to='/admin/users'>
+                                <span className={styles.secondaryText}>Администрирование</span>
+                                <img className={styles.homeLogo} src={homeLogo} alt='home' />
+                            </Link>{' '}
+                            / <span>Пользователь</span>
+                        </React.Fragment>
+                    ) : (
+                        headerTitle(path, role?.type)
+                    )}
                 </h2>
+                <HeaderUser
+                    avatar={avatar}
+                    userFirstName={userFirstName}
+                    className={styles.hideUserMenu}
+                />
             </div>
-            <HeaderUser avatar={avatar} userFirstName={userFirstName} />
         </header>
     );
 };

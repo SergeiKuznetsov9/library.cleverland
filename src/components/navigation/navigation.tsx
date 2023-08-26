@@ -37,18 +37,6 @@ export const Navigation = ({
 
     const [isMenuBook, setMenuBook] = useState(true);
 
-    const booksCount = (cat: string) => {
-        let result = 0;
-
-        bookList?.forEach(({ categories }) => {
-            if (categories.includes(cat)) {
-                result += 1;
-            }
-        });
-
-        return result;
-    };
-
     useEffect(() => {
         setMenuBook(!!bookCategories && !!bookList);
     }, [bookCategories, bookList]);

@@ -1,6 +1,6 @@
 .header {
     display: grid;
-    height: 58px;
+    height: 106px;
     grid-template-columns: 255px 1fr;
     align-content: center;
     column-gap: 29px;
@@ -8,6 +8,7 @@
 
 .headerLink {
     display: grid;
+    align-items: center;
 }
 
 .logo {
@@ -24,16 +25,25 @@
     grid-column: 2;
     justify-content: space-between;
     align-items: center;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr max-content;
 }
 
 .title {
     grid-row: 1;
     grid-column: 1;
     font-size: 24px;
+    line-height: 30px;
 }
 
 .burgerMenu {
+    display: none;
+}
+
+.secondaryText {
+    color: #a7a7a7;
+}
+
+.homeLogo {
     display: none;
 }
 
@@ -59,6 +69,10 @@
         right: 0;
         z-index: 1;
     }
+
+    div.hideUserMenu {
+        display: none;
+    }
 }
 
 @media (max-width: 600px) {
@@ -74,5 +88,14 @@
 @media (max-width: 400px) {
     .title {
         font-size: 18px;
+    }
+
+    .homeLogo {
+        display: inline;
+        vertical-align: top;
+    }
+
+    .secondaryText {
+        display: none;
     }
 }
