@@ -71,12 +71,25 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
         },
     ];
 
+    const defaultValues = {
+        login: user?.username || '',
+        password: '',
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        phone: user?.phone || '',
+        email: user?.email || '',
+    };
+
     const methods = useForm<BodyFormInputs>({
         mode: 'onBlur',
         reValidateMode: 'onBlur',
+        defaultValues,
     });
 
     const { errors } = methods.formState;
+    const { getValues } = methods;
+
+    console.log(getValues());
 
     useEffect(() => {
         if (isUpdateSuccess) {
@@ -138,7 +151,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                                 // clearActionErrors={clearErrors}
                                 autoComplete='off'
                                 isDisabled={isDisabled}
-                                defaultValue={data}
                                 notAuthFilled={true}
                             />
                         ) : (
@@ -151,7 +163,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                                 placeholder={placeholder}
                                 validate={validation}
                                 required={name === 'login' || name === 'email'}
-                                defaultValue={data}
                                 isDisabled={isDisabled}
                                 error={errors[name as keyof BodyFormInputs]?.message}
                                 hint={hint}
@@ -181,6 +192,9 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                     </div>
                 </form>
             </FormProvider>
+            <button type='button' onClick={() => console.log(getValues())}>
+                ClickMe
+            </button>
         </div>
     );
 };

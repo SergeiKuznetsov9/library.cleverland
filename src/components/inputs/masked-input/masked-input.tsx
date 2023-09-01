@@ -38,7 +38,6 @@ export const CustomMaskedInput = ({
     const watchedFieldValue = watch(name || '');
 
     const handleFocus = () => setIsFilled(true);
-
     const handleBlur = () => {
         trigger(name);
         setIsFilled(Boolean(watchedFieldValue));
@@ -52,6 +51,8 @@ export const CustomMaskedInput = ({
             clearActionErrors?.();
         }
     };
+
+    console.log(name);
 
     return (
         <div className={styles.formControlInner}>
