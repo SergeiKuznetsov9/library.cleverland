@@ -2,8 +2,8 @@ import { Loader } from '../../components/loader/loader';
 import { useAppSelector } from '../../store/hooks';
 import { getUserSelector } from '../../store/user/selectors';
 
+import { ProfileBody } from './profile-body';
 import { ProfileHeader } from './profile-header';
-import { ProfileBody } from './ptofile-body';
 
 import styles from './admin-profile-page.module.scss';
 

@@ -30,7 +30,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
         {
             placeholder: 'Логин',
             name: 'login',
-            data: user?.username,
             validation: validateLogin,
             hint: 'Используйте для логина латинский алфавит и цифры',
         },
@@ -38,27 +37,23 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
             type: 'password',
             placeholder: 'Пароль',
             name: 'password',
-            data: '************',
             validation: validatePassword,
             hint: 'Пароль не менее 8 символов, с заглавной буквой и цифрой',
         },
         {
             placeholder: 'Имя',
             name: 'firstName',
-            data: user?.firstName,
             validation: () => undefined,
         },
         {
             placeholder: 'Фамилия',
             name: 'lastName',
-            data: user?.lastName,
             validation: () => undefined,
         },
         {
             type: 'tel',
             placeholder: 'Номер телефона',
             name: 'phone',
-            data: user?.phone,
             validation: () => undefined,
             hint: 'В формате +375 (xx) xxx-xx-xx',
         },
@@ -66,7 +61,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
             type: 'email',
             placeholder: 'E-mail',
             name: 'email',
-            data: user?.email,
             validation: validateEmail,
         },
     ];
@@ -86,10 +80,10 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
         defaultValues,
     });
 
-    const { errors } = methods.formState;
-    const { getValues } = methods;
-
-    console.log(getValues());
+    const {
+        getValues,
+        formState: { errors },
+    } = methods;
 
     useEffect(() => {
         if (isUpdateSuccess) {
@@ -120,7 +114,7 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                     onSubmit={methods.handleSubmit(handleSubmit)}
                     data-test-id='profile-form'
                 >
-                    {TABLE.map(({ placeholder, data, name, type, hint, validation }) =>
+                    {TABLE.map(({ placeholder, name, type, hint, validation }) =>
                         name === 'password' ? (
                             <PasswordInput
                                 dataTestId={`input-${name}`}
@@ -139,6 +133,7 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                                 key={name}
                                 type={type}
                                 name={name}
+                                control={methods.control}
                                 placeholder={placeholder}
                                 validationPattern={{
                                     value: REGEXP.phoneNumber,
@@ -148,7 +143,7 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                                 required={false}
                                 hint={hint}
                                 inputMode='tel'
-                                // clearActionErrors={clearErrors}
+                                setError={methods.setError}
                                 autoComplete='off'
                                 isDisabled={isDisabled}
                                 notAuthFilled={true}

@@ -14,6 +14,6 @@ export type TableType = {
     type?: HTMLInputTypeAttribute;
     placeholder: string;
     name: string;
-    data: string;
+    data?: string;
     validation?: (value: string) => string | boolean | undefined;
 };
