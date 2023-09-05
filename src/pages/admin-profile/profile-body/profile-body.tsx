@@ -81,7 +81,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
     });
 
     const {
-        getValues,
         formState: { errors },
     } = methods;
 
@@ -187,9 +186,6 @@ export const ProfileBody = ({ user }: ProfileBodyProps) => {
                     </div>
                 </form>
             </FormProvider>
-            <button type='button' onClick={() => console.log(getValues())}>
-                ClickMe
-            </button>
         </div>
     );
 };
