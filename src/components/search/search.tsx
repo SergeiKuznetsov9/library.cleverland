@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { useAppDispatch } from '../../store/hooks';
-import { searchbookList } from '../../store/search';
+import { searchBookList } from '../../store/search';
 import { Button } from '../button';
 
 import iconClose from './assets/icon-close.svg';
@@ -30,7 +30,7 @@ export const Search = ({
 
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         setValue(target.value.trimStart());
-        dispatch(searchbookList(target.value.trimStart().toLowerCase()));
+        dispatch(searchBookList(target.value.trimStart().toLowerCase()));
     };
 
     const onOpenInput = () => {

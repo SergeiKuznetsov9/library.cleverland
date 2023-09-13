@@ -10,6 +10,7 @@ import styles from './searching-input.module.scss';
 
 type SearchProps = {
     searchValue?: string;
+    searchingInputPlaceholder?: string;
     hideSorting: () => void;
     showSorting: () => void;
     handleInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -20,6 +21,7 @@ export const SearchingInput: FC<SearchProps> = ({
     showSorting,
     handleInput,
     searchValue,
+    searchingInputPlaceholder,
 }) => {
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const inputContainerRef = useRef<HTMLDivElement | null>(null);
@@ -53,7 +55,7 @@ export const SearchingInput: FC<SearchProps> = ({
             >
                 <input
                     className={styles.input}
-                    placeholder='Поиск книги или автора…'
+                    placeholder={searchingInputPlaceholder ?? 'Поиск книги или автора…'}
                     onChange={handleInput}
                     value={searchValue}
                 />

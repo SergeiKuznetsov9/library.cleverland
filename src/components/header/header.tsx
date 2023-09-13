@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { bookCategoriesRequest } from '../../store/books';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { searchbookList } from '../../store/search';
+import { searchBookList } from '../../store/search';
 import { getUserFullInfoSelector } from '../../store/user/selectors';
 import { headerTitle } from '../../utils/header-title';
 import { BurgerMenu } from '../burger-menu';
@@ -29,7 +29,7 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
     }, [dispatch]);
 
     const resetSearchValue = () => {
-        dispatch(searchbookList(''));
+        dispatch(searchBookList(''));
     };
 
     return (

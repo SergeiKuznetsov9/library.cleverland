@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Sorting } from '../../constants/sorting';
 
-import { BooksFiltersType, ClientsFilteringPayload, SearchParams } from './types';
+import { BooksFiltersType, ClientsFilters, SearchParams } from './types';
 
 export const initialState: SearchParams = {
     filter: '',
@@ -10,7 +10,7 @@ export const initialState: SearchParams = {
     sortCriteriaForRequest: [],
     bookingFree: false,
     clientsFilters: {
-        all: false,
+        all: true,
         holders: false,
         blocked: false,
     },
@@ -25,7 +25,7 @@ export const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
-        searchbookList: (state, action: PayloadAction<string>) => {
+        searchBookList: (state, action: PayloadAction<string>) => {
             state.filter = action.payload;
         },
         setSortCriterion: (state, action: PayloadAction<Sorting[]>) => {
@@ -37,8 +37,8 @@ export const searchSlice = createSlice({
         setBookingFree: (state, action: PayloadAction<boolean>) => {
             state.bookingFree = action.payload;
         },
-        setClientsFilter: (state, action: PayloadAction<ClientsFilteringPayload>) => {
-            state.clientsFilters[action.payload.filterName] = action.payload.filterValue;
+        setClientsFilter: (state, action: PayloadAction<ClientsFilters>) => {
+            state.clientsFilters = action.payload;
         },
         setBooksFilter: (state, action: PayloadAction<BooksFiltersType>) => {
             state.booksFilters = action.payload;
@@ -50,7 +50,7 @@ export const searchSlice = createSlice({
 });
 
 export const {
-    searchbookList,
+    searchBookList,
     setSortCriterion,
     setSortCriterionForRequest,
     setBookingFree,

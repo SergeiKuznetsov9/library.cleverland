@@ -12,6 +12,7 @@ import styles from './menu-admin.module.scss';
 type MenuAdminProps = {
     className?: string;
     searchValue?: string;
+    searchingInputPlaceholder?: string;
     handleSearchInput: (value: string) => void;
     handleSortDirection: (value: boolean) => void;
 };
@@ -21,6 +22,7 @@ export const MenuAdmin: FC<MenuAdminProps> = ({
     handleSearchInput,
     handleSortDirection,
     searchValue,
+    searchingInputPlaceholder,
 }) => {
     const dispatch = useAppDispatch();
     const [isAscSorting, setIsAscSorting] = useState(true);
@@ -51,6 +53,7 @@ export const MenuAdmin: FC<MenuAdminProps> = ({
                 showSorting={showSorting}
                 handleInput={handleInput}
                 searchValue={searchValue}
+                searchingInputPlaceholder={searchingInputPlaceholder}
             />
             <div ref={sortingButton}>
                 <SortingButton handleSorting={handleSorting} isAscSorting={isAscSorting} />

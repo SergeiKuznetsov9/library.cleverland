@@ -8,7 +8,7 @@ import { NAV_MENU_ALL, NAV_MENU_MAIN } from '../../constants/nav-menu-list';
 import { bookingDeleteRequest, toggleBookReviewModal } from '../../store/books';
 import { BookListItem } from '../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { searchbookList } from '../../store/search';
+import { searchBookList } from '../../store/search';
 import { searchSelector } from '../../store/search/selectors';
 import { formatDate } from '../../utils/date/date-utils';
 import { highlightMatches } from '../../utils/highlight-matches';
@@ -61,7 +61,7 @@ export const Card = (props: BookType) => {
     const handleHighlight = (string: string) => highlightMatches(filter, string);
 
     const resetSearchValue = () => {
-        dispatch(searchbookList(''));
+        dispatch(searchBookList(''));
     };
 
     const handleOpenTakeReviewModal = (e: SyntheticEvent<EventTarget>) => {
