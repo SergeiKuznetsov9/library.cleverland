@@ -1,13 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useInfiniteScroll } from '../../../hooks/use-infinite-scroll';
 import {
     bookListRequestAllDownloaded,
     bookListRequestClean,
     bookListRequestWithPagination,
 } from '../../../store/books';
-import { getBookList, getIsAllBooksListDownloaded } from '../../../store/books/selectors';
+import {
+    getBookList,
+    getIsAllBooksListDownloaded,
+    getLoadingBooksList,
+} from '../../../store/books/selectors';
+import { BookListItem } from '../../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setBooksOrderAsc } from '../../../store/search';
 import { booksFilterStatusSelector, booksOrder } from '../../../store/search/selectors';
@@ -18,27 +22,17 @@ import styles from './books-list-admin.module.scss';
 
 export const BooksListAdmin = () => {
     const dispatch = useAppDispatch();
-    const [searchValue, setSearchValue] = useState('');
     const bookList = useAppSelector(getBookList);
-    const isAllBooksListDownloaded = useAppSelector(getIsAllBooksListDownloaded);
+    const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
+    const isLoading = useAppSelector(getLoadingBooksList);
     const { isBooked, isIssued } = useAppSelector(booksFilterStatusSelector);
     const isBooksOrderAsc = useSelector(booksOrder);
 
+    const [filteredBookList, setFilteredBookList] = useState<BookListItem[]>([]);
+    const [searchValue, setSearchValue] = useState('');
     const [pageNumber, setPageNumber] = useState(1);
-    const [lastHTMLElement, setLastHTMLElement] = useState<HTMLLIElement | null>(null);
-
-    const setRef = (HTMLElement: HTMLLIElement) => {
-        setLastHTMLElement(HTMLElement);
-    };
-
-    const handleIntersection = useCallback(() => {
-        if (!isAllBooksListDownloaded) setPageNumber((currentPage) => currentPage + 1);
-    }, [isAllBooksListDownloaded]);
-
-    useInfiniteScroll({
-        triggerRef: lastHTMLElement,
-        callback: handleIntersection,
-    });
+    const [noScroll, setNoScroll] = useState(true);
+    const [isSearchingTouched, setIsSearchingTouched] = useState(false);
 
     const getBooksByPagination = () => {
         dispatch(
@@ -51,13 +45,49 @@ export const BooksListAdmin = () => {
         );
     };
 
+    const filterBooks = () =>
+        bookList?.filter((book) => book.title.toLowerCase().includes(searchValue.toLowerCase()));
+
     const handleSearchInput = (value: string) => {
         setSearchValue(value);
+        if (!isSearchingTouched) {
+            setIsSearchingTouched(true);
+        }
     };
 
     const handleSortDirection = (value: boolean) => {
         dispatch(setBooksOrderAsc(value ? true : false));
     };
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver((entries) => {
+            const { innerHeight } = window;
+            const scrollBlockHeight = entries[0].contentRect.height;
+
+            if (innerHeight >= scrollBlockHeight) {
+                setNoScroll(true);
+            } else {
+                setNoScroll(false);
+            }
+        });
+
+        resizeObserver.observe(document.documentElement);
+
+        return () => resizeObserver.unobserve(document.documentElement);
+    }, []);
+
+    useEffect(() => {
+        if (noScroll && isSearchingTouched && !isAllDownloaded) {
+            setPageNumber((currentPage) => currentPage + 1);
+        }
+    }, [noScroll, isSearchingTouched, isAllDownloaded, bookList]);
+
+    useEffect(() => {
+        if (searchValue && filterBooks()?.length === filteredBookList.length && !isAllDownloaded) {
+            setPageNumber((currentPage) => currentPage + 1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookList]);
 
     useEffect(() => {
         dispatch(bookListRequestClean());
@@ -79,6 +109,31 @@ export const BooksListAdmin = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isBooked, isIssued, isBooksOrderAsc]);
 
+    useEffect(() => {
+        const scrollHandler = (event: any) => {
+            const { innerHeight } = window;
+            const { scrollTop } = event.target.documentElement;
+            const { offsetHeight } = event.target.documentElement;
+
+            if (scrollTop + innerHeight >= offsetHeight - 100 && !isLoading && !isAllDownloaded) {
+                setPageNumber((currentPage) => currentPage + 1);
+                document.removeEventListener('scroll', scrollHandler);
+            }
+        };
+
+        document.addEventListener('scroll', scrollHandler);
+
+        return () => {
+            document.removeEventListener('scroll', scrollHandler);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoading]);
+
+    useEffect(() => {
+        setFilteredBookList(filterBooks() ?? []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchValue, bookList]);
+
     return (
         <section className={styles.adminPage}>
             <MenuAdmin
@@ -88,7 +143,7 @@ export const BooksListAdmin = () => {
                 searchValue={searchValue}
             />
             <ul>
-                {bookList?.map((book, index) => (
+                {filteredBookList?.map((book) => (
                     <BookCardAdmin
                         key={book.id}
                         className={styles.bookCard}
@@ -96,7 +151,7 @@ export const BooksListAdmin = () => {
                         title={book.title}
                         booking={book.booking}
                         delivery={book.delivery}
-                        ref={index === bookList.length - 1 ? setRef : null}
+                        searchValue={searchValue}
                     />
                 ))}
             </ul>

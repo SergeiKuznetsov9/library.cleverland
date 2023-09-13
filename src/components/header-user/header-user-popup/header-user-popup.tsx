@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import Cookies from 'js-cookie';
 
@@ -19,6 +19,7 @@ export const HeaderUserPopup = ({ className, onClickItemMenu }: HeaderUserPopupP
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { role } = useAppSelector(getUserFullInfoSelector);
+    const { pathname } = useLocation();
 
     const logout = () => {
         Cookies.remove('token');
@@ -31,7 +32,7 @@ export const HeaderUserPopup = ({ className, onClickItemMenu }: HeaderUserPopupP
         <div data-test-id='popup' className={classNames(styles.popUp, className)}>
             <Link
                 className={styles.popUpItem}
-                to={ROUTES.profile}
+                to={pathname.includes('admin') ? ROUTES.adminProfile : ROUTES.profile}
                 data-test-id='profile-button'
                 onClick={onClickItemMenu}
             >

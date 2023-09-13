@@ -1,5 +1,5 @@
 import { DetailedHTMLProps, InputHTMLAttributes, ReactNode } from 'react';
-import { Validate } from 'react-hook-form';
+import { Control, Validate } from 'react-hook-form';
 
 export type CustomInputProps = DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
@@ -16,4 +16,6 @@ export type CustomInputProps = DetailedHTMLProps<
     isDisabled?: boolean;
     dataTestId?: string;
     customHint?: ReactNode;
+    control?: Control<any>;
+    setError?: any;
 };

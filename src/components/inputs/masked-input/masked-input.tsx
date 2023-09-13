@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useState } from 'react';
-import { useFormContext, ValidationRule } from 'react-hook-form';
+import { Controller, useFormContext, ValidationRule } from 'react-hook-form';
 import MaskedInput from 'react-text-mask';
 import classNames from 'classnames';
 
@@ -19,6 +19,7 @@ export const CustomMaskedInput = ({
     name,
     placeholder,
     error,
+    control,
     clearActionErrors,
     required,
     hint,
@@ -30,15 +31,15 @@ export const CustomMaskedInput = ({
     isDisabled,
     defaultValue,
     notAuthFilled,
+    setError,
 }: CustomMaskedInputProps) => {
-    const [isFilled, setIsFilled] = useState(false);
+    const [isFilled, setIsFilled] = useState(true);
     const inputClassName = classNames(styles.input, className, error && styles.error);
     const { register, watch, trigger, setValue, clearErrors } = useFormContext();
 
     const watchedFieldValue = watch(name || '');
 
     const handleFocus = () => setIsFilled(true);
-
     const handleBlur = () => {
         trigger(name);
         setIsFilled(Boolean(watchedFieldValue));
@@ -50,6 +51,7 @@ export const CustomMaskedInput = ({
         if (watchedFieldValue !== value) {
             clearErrors(name);
             clearActionErrors?.();
+            setError(name, null);
         }
     };
 
@@ -64,23 +66,31 @@ export const CustomMaskedInput = ({
                 >
                     {placeholder}
                 </span>
-                <MaskedInput
-                    placeholderChar='x'
-                    mask={mask}
-                    type={type}
-                    className={inputClassName}
-                    {...register(name || '', {
-                        required: required && 'Поле не может быть пустым',
-                        validate,
-                        pattern: validationPattern,
-                    })}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    inputMode={inputMode}
-                    autoComplete={autoComplete}
-                    disabled={isDisabled}
-                    defaultValue={defaultValue}
+
+                <Controller
+                    name={name as string}
+                    control={control}
+                    render={({ field }) => (
+                        <MaskedInput
+                            placeholderChar='x'
+                            mask={mask}
+                            type={type}
+                            className={inputClassName}
+                            {...register(name || '', {
+                                required: required && 'Поле не может быть пустым',
+                                validate,
+                                pattern: validationPattern,
+                            })}
+                            {...field}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            inputMode={inputMode}
+                            autoComplete={autoComplete}
+                            disabled={isDisabled}
+                            defaultValue={defaultValue}
+                        />
+                    )}
                 />
             </div>
             <Hint view={error ? 'error' : 'ghost'} className={styles.hint}>
