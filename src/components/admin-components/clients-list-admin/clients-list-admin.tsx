@@ -103,6 +103,7 @@ export const ClientsListAdmin = () => {
                     <Link key={client.id} to={`${client.id}`}>
                         <ClientCardAdmin
                             className={styles.clientCard}
+                            id={client.id}
                             avatar={client.avatar}
                             firstName={client.firstName}
                             lastName={client.lastName}

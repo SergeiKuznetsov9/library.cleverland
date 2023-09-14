@@ -10,3 +10,6 @@ export const getClientsHoldersList = (state: RootState) =>
 
 export const getClientInfo = (state: RootState) => state.clients.client.data;
 export const getClientsListIsLoading = (state: RootState) => state.clients.clientsList.isLoading;
+
+export const getClientIsBlocking = (state: RootState) => state.clients.clientBlock.isLoading;
+export const getClientIsUnblocking = (state: RootState) => state.clients.clientUnblock.isLoading;
