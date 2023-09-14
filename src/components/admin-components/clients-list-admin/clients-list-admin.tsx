@@ -55,24 +55,39 @@ export const ClientsListAdmin = () => {
     }, []);
 
     useEffect(() => {
+        let result: ClientsListItem[] = [];
+
         if (all) {
-            setClientsListForRender(
-                searchValue ? filterUsers(clientsList ?? []) : clientsList ?? [],
-            );
+            result = searchValue ? filterUsers(clientsList ?? []) : clientsList ?? [];
         }
         if (holders) {
-            setClientsListForRender(
-                searchValue ? filterUsers(clientsHoldersList) : clientsHoldersList,
-            );
+            result = searchValue ? filterUsers(clientsHoldersList) : clientsHoldersList;
         }
         if (blocked) {
-            setClientsListForRender(
-                searchValue ? filterUsers(clientsBlockedList) : clientsBlockedList,
-            );
+            result = searchValue ? filterUsers(clientsBlockedList) : clientsBlockedList;
         }
 
+        const res = [...result];
+
+        if (isSortDesc && result?.length) {
+            res?.sort((a, b) => a.firstName.localeCompare(b.firstName));
+        } else {
+            res?.sort((a, b) => b.firstName.localeCompare(a.firstName));
+        }
+
+        setClientsListForRender(res);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [all, holders, blocked, clientsList, clientsHoldersList, clientsBlockedList, searchValue]);
+    }, [
+        all,
+        holders,
+        blocked,
+        clientsList,
+        clientsHoldersList,
+        clientsBlockedList,
+        searchValue,
+        isSortDesc,
+    ]);
 
     return (
         <section className={styles.adminPage}>
