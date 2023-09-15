@@ -6,7 +6,7 @@ import { ERROR } from '../../../constants/errors';
 import { TOAST } from '../../../constants/toast';
 import { Booking, Delivery } from '../../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { issueRequest } from '../../../store/issues';
+import { issueRequest, returnRequest } from '../../../store/issues';
 import { booksFilterStatusSelector } from '../../../store/search/selectors';
 import { setToast } from '../../../store/view';
 import {
@@ -52,7 +52,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
         return BookStatus.FREE;
     };
     const status = defineStatus();
-    const { isBooked } = useAppSelector(booksFilterStatusSelector);
+    const { isBooked, isIssued } = useAppSelector(booksFilterStatusSelector);
     const handleHighlight = (string: string) => highlightMatches(searchValue, string);
 
     const issueBook = () => {
@@ -60,7 +60,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
             data: {
                 handed: true,
                 book: id,
-                recipient: booking?.customerId,
+                recipient: booking?.customerId as number,
                 dateHandedFrom: currentDateString(),
                 dateHandedTo: twoWeeksLaterDateString(),
                 recipientFirstName: booking?.customerFirstName,
@@ -78,6 +78,10 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
         if (booking?.customerId) {
             dispatch(issueRequest(payload));
         }
+    };
+
+    const returnBook = () => {
+        dispatch(returnRequest({ isIssued, deliveryId: delivery!.id }));
     };
 
     return (
@@ -140,7 +144,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
                         <React.Fragment>
                             {' '}
                             <Button
-                                onClick={() => console.log('Отметка о возврате')}
+                                onClick={returnBook}
                                 view='secondary'
                                 classButton={styles.cardButton}
                             >

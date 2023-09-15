@@ -23,7 +23,7 @@ import {
     watchClientRequest,
     watchClientUnblock,
 } from './clients/sagas';
-import { watchIssueRequest } from './issues/sagas';
+import { watchIssueRequest, watchReturnRequest } from './issues/sagas';
 import { watchUserRequest } from './user/sagas';
 
 export function* rootSaga() {
@@ -47,5 +47,6 @@ export function* rootSaga() {
         fork(watchClientBlock),
         fork(watchClientUnblock),
         fork(watchIssueRequest),
+        fork(watchReturnRequest),
     ]);
 }

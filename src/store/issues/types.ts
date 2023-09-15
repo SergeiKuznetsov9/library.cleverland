@@ -4,11 +4,16 @@ export type IssuesType = {
         isSuccess: boolean;
         isError: boolean;
     };
+    return: {
+        isLoading: boolean;
+        isSuccess: boolean;
+        isError: boolean;
+    };
 };
 
 export type IssuePayload = {
     data: {
-        handed: true;
+        handed: boolean;
         book: number;
         recipient: number;
         dateHandedFrom: string;

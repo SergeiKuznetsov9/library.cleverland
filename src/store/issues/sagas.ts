@@ -11,7 +11,14 @@ import { addDeliveryStateToBook, removeIssuedBook } from '../books';
 import { setToast } from '../view';
 
 import { DeliveryModel, IssuePayload } from './types';
-import { issueRequest, issueRequestFailure, issueRequestSuccess } from '.';
+import {
+    issueRequest,
+    issueRequestFailure,
+    issueRequestSuccess,
+    returnRequest,
+    returnRequestFailure,
+    returnRequestSuccess,
+} from '.';
 
 function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
     try {
@@ -48,6 +55,36 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
     }
 }
 
+function* returnRequestWorker({
+    payload,
+}: PayloadAction<{ isIssued: boolean; deliveryId: number }>) {
+    try {
+        const response: AxiosResponse<any> = yield call(
+            axiosInstance.delete,
+            `${ISSUE_URL.issue}/${payload.deliveryId}`,
+        );
+
+        console.log(response);
+
+        yield put(returnRequestSuccess());
+
+        // if (payload.isIssued) {
+        //     yield put(removeReturnedBook(payload.data.book));
+        // } else {
+        //     yield put(addDeliveryStateToBook({ deliveryModel, bookId: payload.data.book }));
+        // }
+
+        // yield put(setToast({ type: TOAST.success, text: MESSAGES.issue }));
+    } catch {
+        yield put(returnRequestFailure());
+        // yield put(setToast({ type: TOAST.error, text: ERROR.issueError }));
+    }
+}
+
 export function* watchIssueRequest() {
     yield takeLatest(issueRequest, issueRequestWorker);
+}
+
+export function* watchReturnRequest() {
+    yield takeLatest(returnRequest, returnRequestWorker);
 }
