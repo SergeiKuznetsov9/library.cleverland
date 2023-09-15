@@ -17,10 +17,6 @@ export const AUTH_URL = {
     reset: `${BASE_AUTH_URL}/reset-password`,
 };
 
-/* export const USERS_URL = {
-    user: `${BASE_URL}/users`,
-}; */
-
 export const FILE_UPLOAD = {
     upload: `${BASE_URL}/upload`,
 };
@@ -38,4 +34,8 @@ export const FILTERS = {
 export const CLIENTS_URL = {
     clients: `${BASE_URL}/users`,
     permissions: `${BASE_URL}/users-permissions`,
+};
+
+export const ISSUE_URL = {
+    issue: `${BASE_URL}/deliveries`,
 };

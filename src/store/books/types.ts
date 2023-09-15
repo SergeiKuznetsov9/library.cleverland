@@ -74,8 +74,8 @@ export type BookListItem = {
     };
     categories: string[];
     id: number;
-    booking: Booking;
-    delivery: Delivery;
+    booking: Booking | null;
+    delivery: Delivery | null;
     histories: [
         {
             id: number;

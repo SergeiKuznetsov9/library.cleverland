@@ -2,8 +2,18 @@ import React, { FC } from 'react';
 import classNames from 'classnames';
 
 import IconPlugImg from '../../../assets/img/icon-plug-img.svg';
+import { ERROR } from '../../../constants/errors';
+import { TOAST } from '../../../constants/toast';
 import { Booking, Delivery } from '../../../store/books/types';
-import { formatDateToDDMMYYYY } from '../../../utils/date/date-utils';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { issueRequest } from '../../../store/issues';
+import { booksFilterStatusSelector } from '../../../store/search/selectors';
+import { setToast } from '../../../store/view';
+import {
+    currentDateString,
+    formatDateToDDMMYYYY,
+    twoWeeksLaterDateString,
+} from '../../../utils/date/date-utils';
 import { highlightMatches } from '../../../utils/highlight-matches';
 import { Button } from '../../button';
 
@@ -16,6 +26,7 @@ type BookCardAdminProps = {
     booking: Booking | null;
     delivery: Delivery | null;
     searchValue: string;
+    id: number;
 };
 
 enum BookStatus {
@@ -31,7 +42,9 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
     booking,
     delivery,
     searchValue,
+    id,
 }) => {
+    const dispatch = useAppDispatch();
     const defineStatus = () => {
         if (booking) return BookStatus.BOOKED;
         if (delivery) return BookStatus.ISSUED;
@@ -39,8 +52,33 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
         return BookStatus.FREE;
     };
     const status = defineStatus();
-
+    const { isBooked } = useAppSelector(booksFilterStatusSelector);
     const handleHighlight = (string: string) => highlightMatches(searchValue, string);
+
+    const issueBook = () => {
+        const payload = {
+            data: {
+                handed: true,
+                book: id,
+                recipient: booking?.customerId,
+                dateHandedFrom: currentDateString(),
+                dateHandedTo: twoWeeksLaterDateString(),
+                recipientFirstName: booking?.customerFirstName,
+                recipientLastName: booking?.customerLastName,
+                isBooked,
+            },
+        };
+
+        if (!booking?.customerId) {
+            dispatch(setToast({ type: TOAST.error, text: ERROR.booking }));
+
+            return;
+        }
+
+        if (booking?.customerId) {
+            dispatch(issueRequest(payload));
+        }
+    };
 
     return (
         <li className={classNames(styles.card, className)}>
@@ -117,11 +155,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
                             </Button>
                         </React.Fragment>
                     ) : (
-                        <Button
-                            onClick={() => console.log('Выдать')}
-                            view='primary'
-                            classButton={styles.cardButton}
-                        >
+                        <Button onClick={issueBook} view='primary' classButton={styles.cardButton}>
                             Выдать
                         </Button>
                     )}

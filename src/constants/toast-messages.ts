@@ -7,4 +7,5 @@ export enum MESSAGES {
     updateReviewSuccess = 'Спасибо, что нашли время изменить оценку!',
     clientBlocked = 'Пользователь успешно заблокирован!',
     clientUnblocked = 'Пользователь успешно разблокирован!',
+    issue = 'Книга успешно выдана!',
 }

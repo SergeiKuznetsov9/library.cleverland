@@ -4,6 +4,7 @@ import {
     DefaultValuesType,
     UpdateCommentPayloadType,
 } from '../../components/modal-rate-book/modal-rate-book';
+import { DeliveryModel } from '../issues/types';
 
 import {
     BookCategoriesDataType,
@@ -246,6 +247,25 @@ export const booksSlice = createSlice({
             state.bookReview.isError = false;
             state.bookReview.isSuccess = false;
         },
+        addDeliveryStateToBook: (
+            state,
+            action: PayloadAction<{ deliveryModel: DeliveryModel; bookId: number }>,
+        ) => {
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === action.payload.bookId) {
+                    return { ...book, delivery: action.payload.deliveryModel, booking: null };
+                }
+
+                return book;
+            });
+
+            state.bookList.data = newBooksArray ?? [];
+        },
+        removeIssuedBook: (state, action: PayloadAction<number>) => {
+            const newBooksArray = state.bookList.data?.filter((book) => book.id !== action.payload);
+
+            state.bookList.data = newBooksArray ?? [];
+        },
     },
 });
 
@@ -280,4 +300,6 @@ export const {
     bookReviewUpdateRequest,
     bookReviewUpdateSuccess,
     bookReviewUpdateFailure,
+    addDeliveryStateToBook,
+    removeIssuedBook,
 } = booksSlice.actions;
