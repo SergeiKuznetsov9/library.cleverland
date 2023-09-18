@@ -1,14 +1,13 @@
+type DownloadingStatus = {
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+};
+
 export type IssuesType = {
-    issue: {
-        isLoading: boolean;
-        isSuccess: boolean;
-        isError: boolean;
-    };
-    return: {
-        isLoading: boolean;
-        isSuccess: boolean;
-        isError: boolean;
-    };
+    issue: DownloadingStatus;
+    return: DownloadingStatus;
+    prolongation: DownloadingStatus;
 };
 
 export type IssuePayload = {
@@ -22,6 +21,17 @@ export type IssuePayload = {
         recipientLastName?: string;
         isBooked?: boolean;
     };
+};
+
+export type ReturnPayload = {
+    isIssued: boolean;
+    deliveryId: number;
+    book: number;
+};
+
+export type ProlongationPayload = {
+    deliveryId: number;
+    book: number;
 };
 
 export type DeliveryModel = {

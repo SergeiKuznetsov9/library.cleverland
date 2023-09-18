@@ -6,7 +6,7 @@ import { ERROR } from '../../../constants/errors';
 import { TOAST } from '../../../constants/toast';
 import { Booking, Delivery } from '../../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { issueRequest, returnRequest } from '../../../store/issues';
+import { issueRequest, prolongationRequest, returnRequest } from '../../../store/issues';
 import { booksFilterStatusSelector } from '../../../store/search/selectors';
 import { setToast } from '../../../store/view';
 import {
@@ -84,6 +84,10 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
         dispatch(returnRequest({ isIssued, deliveryId: delivery!.id, book: id }));
     };
 
+    const prolongationBook = () => {
+        dispatch(prolongationRequest({ deliveryId: delivery!.id, book: id }));
+    };
+
     return (
         <li className={classNames(styles.card, className)}>
             <div className={styles.imgBlock}>
@@ -151,7 +155,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
                                 Отметка о возврате
                             </Button>
                             <Button
-                                onClick={() => console.log('Продлить')}
+                                onClick={prolongationBook}
                                 view='primary'
                                 classButton={styles.cardButton}
                             >

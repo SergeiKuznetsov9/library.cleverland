@@ -10,11 +10,13 @@ import { MESSAGES } from '../../constants/toast-messages';
 import { addDeliveryStateToBook, removeDeliveryStateFromBook, removeIssuedBook } from '../books';
 import { setToast } from '../view';
 
-import { DeliveryModel, IssuePayload } from './types';
+import { DeliveryModel, IssuePayload, ProlongationPayload, ReturnPayload } from './types';
 import {
     issueRequest,
     issueRequestFailure,
     issueRequestSuccess,
+    prolongationRequest,
+    prolongationRequestSuccess,
     returnRequest,
     returnRequestFailure,
     returnRequestSuccess,
@@ -54,9 +56,7 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
     }
 }
 
-function* returnRequestWorker({
-    payload,
-}: PayloadAction<{ isIssued: boolean; deliveryId: number; book: number }>) {
+function* returnRequestWorker({ payload }: PayloadAction<ReturnPayload>) {
     try {
         yield call(axiosInstance.delete, `${ISSUE_URL.issue}/${payload.deliveryId}`);
 
@@ -75,10 +75,35 @@ function* returnRequestWorker({
     }
 }
 
+function* prolongationRequestWorker({ payload }: PayloadAction<ProlongationPayload>) {
+    try {
+        const response: AxiosResponse<any> = yield call(
+            axiosInstance.put,
+            `${ISSUE_URL.prolongation}/${payload.deliveryId}`,
+        );
+
+        const { dateHandedTo } = response.data.attributes;
+
+        yield put(prolongationRequestSuccess());
+        yield put(changeIssueAtributes({ dateHandedTo, bookId: payload.book }));
+        yield put(setToast({ type: TOAST.success, text: MESSAGES.prolongation }));
+    } catch {
+        yield put(returnRequestFailure());
+        yield put(setToast({ type: TOAST.error, text: ERROR.prolongationError }));
+    }
+}
+
 export function* watchIssueRequest() {
     yield takeLatest(issueRequest, issueRequestWorker);
 }
 
 export function* watchReturnRequest() {
     yield takeLatest(returnRequest, returnRequestWorker);
+}
+
+export function* watchProlongationRequest() {
+    yield takeLatest(prolongationRequest, prolongationRequestWorker);
+}
+function changeIssueAtributes(arg0: { dateHandedTo: any; bookId: number }): any {
+    throw new Error('Function not implemented.');
 }

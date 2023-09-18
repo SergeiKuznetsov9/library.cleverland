@@ -195,3 +195,8 @@ export type BookRateSuccess = {
         publishedAt: string;
     };
 };
+
+export type NewIssueAtributes = {
+    dateHandedTo: string;
+    bookId: number;
+};

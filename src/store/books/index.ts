@@ -16,6 +16,8 @@ import {
     BookListItem,
     BookListPaginationPayload,
     BooksType,
+    Delivery,
+    NewIssueAtributes,
 } from './types';
 
 export const initialState: BooksType = {
@@ -274,6 +276,18 @@ export const booksSlice = createSlice({
         },
         removeIssuedBook: (state, action: PayloadAction<number>) => {
             const newBooksArray = state.bookList.data?.filter((book) => book.id !== action.payload);
+
+            state.bookList.data = newBooksArray ?? [];
+        },
+        changeIssueAtributes: (state, action: PayloadAction<NewIssueAtributes>) => {
+            const { dateHandedTo, bookId } = action.payload;
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === bookId) {
+                    return { ...book, delivery: { ...(book.delivery as Delivery), dateHandedTo } };
+                }
+
+                return book;
+            });
 
             state.bookList.data = newBooksArray ?? [];
         },
