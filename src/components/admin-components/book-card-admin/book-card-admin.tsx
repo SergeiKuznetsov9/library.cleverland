@@ -81,7 +81,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
     };
 
     const returnBook = () => {
-        dispatch(returnRequest({ isIssued, deliveryId: delivery!.id }));
+        dispatch(returnRequest({ isIssued, deliveryId: delivery!.id, book: id }));
     };
 
     return (

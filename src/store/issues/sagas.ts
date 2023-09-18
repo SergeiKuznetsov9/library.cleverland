@@ -7,7 +7,7 @@ import { ISSUE_URL } from '../../constants/api';
 import { ERROR } from '../../constants/errors';
 import { TOAST } from '../../constants/toast';
 import { MESSAGES } from '../../constants/toast-messages';
-import { addDeliveryStateToBook, removeIssuedBook } from '../books';
+import { addDeliveryStateToBook, removeDeliveryStateFromBook, removeIssuedBook } from '../books';
 import { setToast } from '../view';
 
 import { DeliveryModel, IssuePayload } from './types';
@@ -28,23 +28,22 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
             payload,
         );
 
-        const { data } = response;
-
-        const deliveryModel: DeliveryModel = {
-            dateHandedFrom: data.attributes.dateHandedFrom,
-            dateHandedTo: data.attributes.dateHandedTo,
-            handed: true,
-            id: data.id,
-            recipientFirstName: payload.data.recipientFirstName as string,
-            recipientId: payload.data.recipient,
-            recipientLastName: payload.data.recipientLastName as string,
-        };
-
         yield put(issueRequestSuccess());
 
         if (payload.data.isBooked) {
             yield put(removeIssuedBook(payload.data.book));
         } else {
+            const { data } = response;
+            const deliveryModel: DeliveryModel = {
+                dateHandedFrom: data.attributes.dateHandedFrom,
+                dateHandedTo: data.attributes.dateHandedTo,
+                handed: true,
+                id: data.id,
+                recipientFirstName: payload.data.recipientFirstName as string,
+                recipientId: payload.data.recipient,
+                recipientLastName: payload.data.recipientLastName as string,
+            };
+
             yield put(addDeliveryStateToBook({ deliveryModel, bookId: payload.data.book }));
         }
 
@@ -57,27 +56,22 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
 
 function* returnRequestWorker({
     payload,
-}: PayloadAction<{ isIssued: boolean; deliveryId: number }>) {
+}: PayloadAction<{ isIssued: boolean; deliveryId: number; book: number }>) {
     try {
-        const response: AxiosResponse<any> = yield call(
-            axiosInstance.delete,
-            `${ISSUE_URL.issue}/${payload.deliveryId}`,
-        );
-
-        console.log(response);
+        yield call(axiosInstance.delete, `${ISSUE_URL.issue}/${payload.deliveryId}`);
 
         yield put(returnRequestSuccess());
 
-        // if (payload.isIssued) {
-        //     yield put(removeReturnedBook(payload.data.book));
-        // } else {
-        //     yield put(addDeliveryStateToBook({ deliveryModel, bookId: payload.data.book }));
-        // }
+        if (payload.isIssued) {
+            yield put(removeIssuedBook(payload.book));
+        } else {
+            yield put(removeDeliveryStateFromBook(payload.book));
+        }
 
-        // yield put(setToast({ type: TOAST.success, text: MESSAGES.issue }));
+        yield put(setToast({ type: TOAST.success, text: MESSAGES.return }));
     } catch {
         yield put(returnRequestFailure());
-        // yield put(setToast({ type: TOAST.error, text: ERROR.issueError }));
+        yield put(setToast({ type: TOAST.error, text: ERROR.returnError }));
     }
 }
 

@@ -35,7 +35,7 @@ export const issueSlice = createSlice({
         },
         returnRequest: (
             state,
-            action: PayloadAction<{ isIssued: boolean; deliveryId: number }>,
+            action: PayloadAction<{ isIssued: boolean; deliveryId: number; book: number }>,
         ) => {
             state.return.isLoading = true;
         },

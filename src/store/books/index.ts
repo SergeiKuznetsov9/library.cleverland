@@ -261,6 +261,17 @@ export const booksSlice = createSlice({
 
             state.bookList.data = newBooksArray ?? [];
         },
+        removeDeliveryStateFromBook: (state, action: PayloadAction<number>) => {
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === action.payload) {
+                    return { ...book, delivery: null };
+                }
+
+                return book;
+            });
+
+            state.bookList.data = newBooksArray ?? [];
+        },
         removeIssuedBook: (state, action: PayloadAction<number>) => {
             const newBooksArray = state.bookList.data?.filter((book) => book.id !== action.payload);
 
@@ -301,5 +312,6 @@ export const {
     bookReviewUpdateSuccess,
     bookReviewUpdateFailure,
     addDeliveryStateToBook,
+    removeDeliveryStateFromBook,
     removeIssuedBook,
 } = booksSlice.actions;
