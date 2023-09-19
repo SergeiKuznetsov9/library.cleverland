@@ -32,6 +32,12 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
         dispatch(searchBookList(''));
     };
 
+    const getDownlevelUrl = () => {
+        const parts = path.split('/');
+
+        return parts.slice(0, 2).join('/');
+    };
+
     return (
         <header className={styles.header} data-test-id='header'>
             <Link
@@ -46,13 +52,14 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
 
             <div className={styles.block}>
                 <h2 className={styles.title}>
-                    {/^admin\/users\/\d+$/.test(path) && role.type === 'admin' ? (
+                    {/^admin\/(users|books)\/\d+$/.test(path) && role.type === 'admin' ? (
                         <React.Fragment>
-                            <Link to='/admin/users'>
+                            <Link to={getDownlevelUrl()}>
                                 <span className={styles.secondaryText}>Администрирование</span>
                                 <img className={styles.homeLogo} src={homeLogo} alt='home' />
                             </Link>{' '}
-                            / <span>Пользователь</span>
+                            / {path.includes('users') && <span>Пользователь</span>}
+                            {path.includes('books') && <span>Книга</span>}
                         </React.Fragment>
                     ) : (
                         headerTitle(path, role?.type)

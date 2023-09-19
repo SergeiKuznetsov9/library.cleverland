@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import SwiperCore, { FreeMode, Pagination, Thumbs } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -38,6 +38,7 @@ import 'swiper/css/thumbs';
 // eslint-disable-next-line complexity
 export const BookPage = () => {
     const dispatch = useAppDispatch();
+    const { pathname } = useLocation();
     const { category } = useParams();
     const { bookId } = useParams();
     const bookData = useAppSelector(getBookData);
@@ -51,6 +52,7 @@ export const BookPage = () => {
         ?.map(({ user: { commentUserId } }) => commentUserId)
         .includes(user.id);
 
+    const [isAdminPage, setIsAdminPage] = useState(pathname.includes('admin'));
     const [isCommentHide, setCommentHide] = useState(true);
 
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore>();
@@ -73,26 +75,28 @@ export const BookPage = () => {
 
     return (
         <div className={styles.bookPage}>
-            <div className={styles.breadcrumbs}>
-                <div className={styles.breadcrumbsBlock}>
-                    <span className={styles.breadcrumbsTitle}>
-                        <Link
-                            to={`/${NAV_MENU_MAIN.books.path}/${category}`}
-                            className={styles.breadcrumbsLink}
-                            data-test-id='breadcrumbs-link'
-                            onClick={deleteTost}
-                        >
-                            {category === NAV_MENU_ALL.category
-                                ? NAV_MENU_ALL.name
-                                : bookCategories?.map(
-                                      (menuList) => menuList.path === category && menuList.name,
-                                  )}
-                        </Link>
-                        <span className={styles.breadcrumbsSeparator}>/</span>
-                        <span data-test-id='book-name'>{bookData?.title}</span>
-                    </span>
+            {!isAdminPage && (
+                <div className={styles.breadcrumbs}>
+                    <div className={styles.breadcrumbsBlock}>
+                        <span className={styles.breadcrumbsTitle}>
+                            <Link
+                                to={`/${NAV_MENU_MAIN.books.path}/${category}`}
+                                className={styles.breadcrumbsLink}
+                                data-test-id='breadcrumbs-link'
+                                onClick={deleteTost}
+                            >
+                                {category === NAV_MENU_ALL.category
+                                    ? NAV_MENU_ALL.name
+                                    : bookCategories?.map(
+                                          (menuList) => menuList.path === category && menuList.name,
+                                      )}
+                            </Link>
+                            <span className={styles.breadcrumbsSeparator}>/</span>
+                            <span data-test-id='book-name'>{bookData?.title}</span>
+                        </span>
+                    </div>
                 </div>
-            </div>
+            )}
             {(isLoading || isLoadingReview) && <Loader />}
             {bookData && (
                 <React.Fragment>
