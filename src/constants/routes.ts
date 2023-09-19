@@ -12,6 +12,7 @@ export const ROUTES = {
     admin: '/admin',
     adminProfile: '/admin/profile',
     adminBooks: '/admin/books',
+    adminBookDetail: '/admin/books/:bookId',
     adminParagraph: '/admin/:paragraph',
     adminUser: '/admin/users/:id',
 };

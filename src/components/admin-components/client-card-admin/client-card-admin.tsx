@@ -4,6 +4,7 @@ import { clientBlock, clientUnblock } from '../../../store/clients';
 import { ClientDelivery } from '../../../store/clients/types';
 import { useAppDispatch } from '../../../store/hooks';
 import { formatDateToDDMM, formatDateToDDMMYYYY, isDatePass } from '../../../utils/date/date-utils';
+import { highlightMatches } from '../../../utils/highlight-matches';
 import { Button } from '../../button';
 
 import PlugAvatar from './assets/avatar.png';
@@ -16,13 +17,14 @@ type ClientCardAdminProps = {
     className?: string;
     id?: number;
     avatar?: any;
-    firstName?: string;
-    lastName?: string;
-    username?: string;
+    firstName: string;
+    lastName: string;
+    username: string;
     historyCount?: number;
     createdAt: string;
     phone?: string;
     blocked?: boolean;
+    searchValue: string;
     delivery: ClientDelivery;
 };
 
@@ -38,6 +40,7 @@ export const ClientCardAdmin: FC<ClientCardAdminProps> = ({
     phone,
     blocked,
     delivery,
+    searchValue,
 }) => {
     const dispatch = useAppDispatch();
 
@@ -45,6 +48,8 @@ export const ClientCardAdmin: FC<ClientCardAdminProps> = ({
         event.preventDefault();
         dispatch(blocked ? clientUnblock(id) : clientBlock(id));
     };
+
+    const handleHighlight = (string: string) => highlightMatches(searchValue, string);
 
     return (
         <li className={styles.UserCard}>
@@ -55,12 +60,12 @@ export const ClientCardAdmin: FC<ClientCardAdminProps> = ({
             </div>
 
             <div className={styles.nameBlock}>
-                {firstName} {lastName}
+                {handleHighlight(firstName)} {handleHighlight(lastName)}
             </div>
 
             <div className={styles.loginBlock}>
                 <span className={styles.subtitle}>Логин:</span>
-                <span>{username}</span>
+                <span>{handleHighlight(username)}</span>
             </div>
 
             <div className={styles.readedBooksBlock}>
@@ -74,7 +79,9 @@ export const ClientCardAdmin: FC<ClientCardAdminProps> = ({
                 </span>
                 <span className={styles.userInfoLabel}>
                     <span className={styles.subtitle}>Номер телефона: </span>
-                    <span className={styles.info}>{phone?.slice(0, 25)}</span>
+                    <span className={styles.info}>
+                        {phone ? handleHighlight(phone.slice(0, 25)) : ''}
+                    </span>
                 </span>
             </div>
 

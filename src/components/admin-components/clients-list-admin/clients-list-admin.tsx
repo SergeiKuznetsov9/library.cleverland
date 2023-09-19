@@ -43,7 +43,8 @@ export const ClientsListAdmin = () => {
             (client) =>
                 client.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
                 client.lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                client.username.toLowerCase().includes(searchValue.toLowerCase()),
+                client.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+                client.phone.toLowerCase().includes(searchValue.toLowerCase()),
         );
 
     useEffect((): (() => void) => {
@@ -113,6 +114,7 @@ export const ClientsListAdmin = () => {
                             phone={client.phone}
                             blocked={client.blocked}
                             delivery={client.delivery}
+                            searchValue={searchValue}
                         />
                     </Link>
                 ))}

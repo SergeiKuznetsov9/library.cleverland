@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import IconPlugImg from '../../../assets/img/icon-plug-img.svg';
@@ -89,86 +90,92 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
     };
 
     return (
-        <li className={classNames(styles.card, className)}>
-            <div className={styles.imgBlock}>
-                <div className={styles.imgContainer}>
-                    <img src={image ? image.url : IconPlugImg} alt={title} />
+        <Link to={`${id}`}>
+            <li className={classNames(styles.card, className)}>
+                <div className={styles.imgBlock}>
+                    <div className={styles.imgContainer}>
+                        <img src={image ? image.url : IconPlugImg} alt={title} />
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles.titleBlock}>{handleHighlight(title)}</div>
+                <div className={styles.titleBlock}>{handleHighlight(title)}</div>
 
-            <div className={styles.holderBlock}>
-                {status === BookStatus.BOOKED && (
-                    <span className={styles.holderLabel}>
-                        Пользователь:{' '}
-                        <span className={styles.holderName}>
-                            {booking!.customerFirstName} {booking!.customerLastName}
-                        </span>
-                    </span>
-                )}
-                {status === BookStatus.ISSUED && (
-                    <span className={styles.holderLabel}>
-                        Пользователь:{' '}
-                        <span className={styles.holderName}>
-                            {delivery!.recipientFirstName} {delivery!.recipientLastName}
-                        </span>
-                    </span>
-                )}
-            </div>
-
-            <div className={styles.statusWithButtonsBlock}>
-                <div className={styles.status}>
-                    {status === BookStatus.ISSUED && (
-                        <span className={styles.statusLabel}>
-                            Срок:{' '}
-                            <span className={styles.statusInfo}>
-                                {formatDateToDDMMYYYY(delivery!.dateHandedFrom)}-
-                                {formatDateToDDMMYYYY(delivery!.dateHandedTo)}
-                            </span>
-                        </span>
-                    )}
-
+                <div className={styles.holderBlock}>
                     {status === BookStatus.BOOKED && (
-                        <span className={styles.statusLabel}>
-                            Дата:{' '}
-                            <span className={styles.statusInfo}>
-                                {formatDateToDDMMYYYY(booking!.dateOrder)}
+                        <span className={styles.holderLabel}>
+                            Пользователь:{' '}
+                            <span className={styles.holderName}>
+                                {booking!.customerFirstName} {booking!.customerLastName}
                             </span>
                         </span>
                     )}
-
-                    <span className={styles.statusLabel}>
-                        Статус: <span className={styles.statusInfo}>{status}</span>
-                    </span>
+                    {status === BookStatus.ISSUED && (
+                        <span className={styles.holderLabel}>
+                            Пользователь:{' '}
+                            <span className={styles.holderName}>
+                                {delivery!.recipientFirstName} {delivery!.recipientLastName}
+                            </span>
+                        </span>
+                    )}
                 </div>
 
-                <div className={styles.buttons}>
-                    {status === BookStatus.ISSUED ? (
-                        <React.Fragment>
-                            {' '}
+                <div className={styles.statusWithButtonsBlock}>
+                    <div className={styles.status}>
+                        {status === BookStatus.ISSUED && (
+                            <span className={styles.statusLabel}>
+                                Срок:{' '}
+                                <span className={styles.statusInfo}>
+                                    {formatDateToDDMMYYYY(delivery!.dateHandedFrom)}-
+                                    {formatDateToDDMMYYYY(delivery!.dateHandedTo)}
+                                </span>
+                            </span>
+                        )}
+
+                        {status === BookStatus.BOOKED && (
+                            <span className={styles.statusLabel}>
+                                Дата:{' '}
+                                <span className={styles.statusInfo}>
+                                    {formatDateToDDMMYYYY(booking!.dateOrder)}
+                                </span>
+                            </span>
+                        )}
+
+                        <span className={styles.statusLabel}>
+                            Статус: <span className={styles.statusInfo}>{status}</span>
+                        </span>
+                    </div>
+
+                    <div className={styles.buttons}>
+                        {status === BookStatus.ISSUED ? (
+                            <React.Fragment>
+                                {' '}
+                                <Button
+                                    onClick={returnBook}
+                                    view='secondary'
+                                    classButton={styles.cardButton}
+                                >
+                                    Отметка о возврате
+                                </Button>
+                                <Button
+                                    onClick={prolongationBook}
+                                    view='primary'
+                                    classButton={styles.cardButton}
+                                >
+                                    Продлить
+                                </Button>
+                            </React.Fragment>
+                        ) : (
                             <Button
-                                onClick={returnBook}
-                                view='secondary'
-                                classButton={styles.cardButton}
-                            >
-                                Отметка о возврате
-                            </Button>
-                            <Button
-                                onClick={prolongationBook}
+                                onClick={issueBook}
                                 view='primary'
                                 classButton={styles.cardButton}
                             >
-                                Продлить
+                                Выдать
                             </Button>
-                        </React.Fragment>
-                    ) : (
-                        <Button onClick={issueBook} view='primary' classButton={styles.cardButton}>
-                            Выдать
-                        </Button>
-                    )}
+                        )}
+                    </div>
                 </div>
-            </div>
-        </li>
+            </li>
+        </Link>
     );
 };
