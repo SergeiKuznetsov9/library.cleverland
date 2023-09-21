@@ -26,6 +26,8 @@ export const issueSlice = createSlice({
     reducers: {
         issueRequest: (state, action: PayloadAction<IssuePayload>) => {
             state.issue.isLoading = true;
+            state.issue.isError = false;
+            state.issue.isSuccess = false;
         },
 
         issueRequestSuccess: (state) => {
@@ -41,6 +43,8 @@ export const issueSlice = createSlice({
 
         returnRequest: (state, action: PayloadAction<ReturnPayload>) => {
             state.return.isLoading = true;
+            state.return.isError = false;
+            state.return.isSuccess = false;
         },
         returnRequestSuccess: (state) => {
             state.return.isLoading = false;
@@ -55,6 +59,8 @@ export const issueSlice = createSlice({
 
         prolongationRequest: (state, action: PayloadAction<ProlongationPayload>) => {
             state.prolongation.isLoading = true;
+            state.prolongation.isError = false;
+            state.prolongation.isSuccess = false;
         },
         prolongationRequestSuccess: (state) => {
             state.prolongation.isLoading = false;

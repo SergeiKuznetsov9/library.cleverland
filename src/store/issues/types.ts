@@ -17,8 +17,8 @@ export type IssuePayload = {
         recipient: number;
         dateHandedFrom: string;
         dateHandedTo: string;
-        recipientFirstName?: string;
-        recipientLastName?: string;
+        recipientFirstName: string;
+        recipientLastName: string;
         isBooked?: boolean;
     };
 };
@@ -32,7 +32,7 @@ export type ReturnPayload = {
 
 export type ProlongationPayload = {
     deliveryId: number;
-    book: number;
+    bookId: number;
 };
 
 export type DeliveryModel = {

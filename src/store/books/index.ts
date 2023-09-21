@@ -71,6 +71,8 @@ export const booksSlice = createSlice({
     reducers: {
         bookListRequest: (state) => {
             state.bookList.isLoading = true;
+            state.bookList.isError = false;
+            state.bookList.isSuccess = false;
         },
         bookListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
             state.bookList.isAllDownloaded = action.payload;
@@ -80,6 +82,8 @@ export const booksSlice = createSlice({
             action: PayloadAction<BookListPaginationPayload>,
         ) => {
             state.bookList.isLoading = true;
+            state.bookList.isError = false;
+            state.bookList.isSuccess = false;
         },
         bookListRequestSuccess: (state, action: PayloadAction<BookListItem[]>) => {
             state.bookList.isLoading = false;
@@ -109,6 +113,8 @@ export const booksSlice = createSlice({
         },
         bookRequest: (state, action: PayloadAction<string | number>) => {
             state.book.isLoading = true;
+            state.book.isError = false;
+            state.book.isSuccess = false;
         },
         bookRequestSuccess: (state, action: PayloadAction<BookDataType>) => {
             state.book.isLoading = false;
@@ -128,6 +134,8 @@ export const booksSlice = createSlice({
 
         bookCategoriesRequest: (state) => {
             state.bookCategories.isLoading = true;
+            state.bookCategories.isError = false;
+            state.bookCategories.isSuccess = false;
         },
         bookCategoriesSuccess: (state, action: PayloadAction<BookCategoriesDataType>) => {
             state.bookCategories.isLoading = false;
@@ -151,12 +159,18 @@ export const booksSlice = createSlice({
         },
         bookingRequest: (state, { payload }: PayloadAction<BookingPayload>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingUpdateRequest: (state, { payload }: PayloadAction<BookingUpdatePayload>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingDeleteRequest: (state, action: PayloadAction<BooksType['booking']['id']>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingRequestSuccess: (
             state,
@@ -261,7 +275,7 @@ export const booksSlice = createSlice({
                 return book;
             });
 
-            state.bookList.data = newBooksArray ?? [];
+            state.bookList.data = newBooksArray || [];
         },
         removeDeliveryStateFromBook: (state, action: PayloadAction<number>) => {
             const newBooksArray = state.bookList.data?.map((book) => {

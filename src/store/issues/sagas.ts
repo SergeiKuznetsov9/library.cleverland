@@ -31,23 +31,30 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
             payload,
         );
 
+        const { book, recipientFirstName, recipient, recipientLastName, isBooked } = payload.data;
+
         yield put(issueRequestSuccess());
 
-        if (payload.data.isBooked) {
-            yield put(removeIssuedBook(payload.data.book));
+        if (isBooked) {
+            yield put(removeIssuedBook(book));
         } else {
-            const { data } = response;
+            const {
+                data: {
+                    id,
+                    attributes: { dateHandedFrom, dateHandedTo },
+                },
+            } = response;
             const deliveryModel: DeliveryModel = {
-                dateHandedFrom: data.attributes.dateHandedFrom,
-                dateHandedTo: data.attributes.dateHandedTo,
+                dateHandedFrom,
+                dateHandedTo,
                 handed: true,
-                id: data.id,
-                recipientFirstName: payload.data.recipientFirstName as string,
-                recipientId: payload.data.recipient,
-                recipientLastName: payload.data.recipientLastName as string,
+                id,
+                recipientFirstName,
+                recipientId: recipient,
+                recipientLastName,
             };
 
-            yield put(addDeliveryStateToBook({ deliveryModel, bookId: payload.data.book }));
+            yield put(addDeliveryStateToBook({ deliveryModel, bookId: book }));
         }
 
         yield put(setToast({ type: TOAST.success, text: MESSAGES.issue }));
@@ -57,12 +64,12 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
     }
 }
 
-function* createHistory(bookId: number, recipientId: number) {
+function* createHistory(book: number, user: number) {
     try {
         yield call(axiosInstance.post, `${ISSUE_URL.history}`, {
             data: {
-                book: bookId,
-                user: recipientId,
+                book,
+                user,
             },
         });
 
@@ -72,11 +79,11 @@ function* createHistory(bookId: number, recipientId: number) {
     }
 }
 
-function* updateHistory(bookId: number, historyId: number) {
+function* updateHistory(book: number, historyId: number) {
     try {
         yield call(axiosInstance.put, `${ISSUE_URL.history}/${historyId}`, {
             data: {
-                book: bookId,
+                book,
             },
         });
         yield put(setToast({ type: TOAST.success, text: MESSAGES.updateHistory }));
@@ -125,16 +132,18 @@ function* returnRequestWorker({ payload }: PayloadAction<ReturnPayload>) {
 }
 
 function* prolongationRequestWorker({ payload }: PayloadAction<ProlongationPayload>) {
+    const { deliveryId, bookId } = payload;
+
     try {
         const response: AxiosResponse<any> = yield call(
             axiosInstance.put,
-            `${ISSUE_URL.prolongation}/${payload.deliveryId}`,
+            `${ISSUE_URL.prolongation}/${deliveryId}`,
         );
 
         const { dateHandedTo } = response.data.attributes;
 
         yield put(prolongationRequestSuccess());
-        yield put(changeIssueAtributes({ dateHandedTo, bookId: payload.book }));
+        yield put(changeIssueAtributes({ dateHandedTo, bookId }));
         yield put(setToast({ type: TOAST.success, text: MESSAGES.prolongation }));
     } catch {
         yield put(returnRequestFailure());

@@ -34,6 +34,8 @@ export const clientsSlice = createSlice({
     reducers: {
         clientsListRequest: (state) => {
             state.clientsList.isLoading = true;
+            state.clientsList.isError = false;
+            state.clientsList.isSuccess = false;
         },
         clientsListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
             state.clientsList.isAllDownloaded = action.payload;
@@ -55,6 +57,8 @@ export const clientsSlice = createSlice({
         },
         clientRequest: (state, action: PayloadAction<string>) => {
             state.client.isLoading = true;
+            state.client.isError = false;
+            state.client.isSuccess = false;
         },
         clientRequestSuccess: (state, action: PayloadAction<ClientData>) => {
             state.client.isLoading = false;
@@ -71,6 +75,8 @@ export const clientsSlice = createSlice({
 
         clientBlock: (state, action: PayloadAction<number>) => {
             state.clientBlock.isLoading = true;
+            state.clientBlock.isError = false;
+            state.clientBlock.isSuccess = false;
         },
         clientBlockSuccess: (state) => {
             state.clientBlock.isLoading = false;
@@ -85,6 +91,8 @@ export const clientsSlice = createSlice({
 
         clientUnblock: (state, action: PayloadAction<number>) => {
             state.clientUnblock.isLoading = true;
+            state.clientUnblock.isError = false;
+            state.clientUnblock.isSuccess = false;
         },
         clientUnblockSuccess: (state) => {
             state.clientUnblock.isLoading = false;

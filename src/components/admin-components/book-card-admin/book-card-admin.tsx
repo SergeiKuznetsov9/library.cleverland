@@ -58,24 +58,23 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
 
     const issueBook = (e: SyntheticEvent<EventTarget>) => {
         e.preventDefault();
-        const payload = {
-            data: {
-                handed: true,
-                book: id,
-                recipient: booking?.customerId as number,
-                dateHandedFrom: currentDateString(),
-                dateHandedTo: twoWeeksLaterDateString(),
-                recipientFirstName: booking?.customerFirstName,
-                recipientLastName: booking?.customerLastName,
-                isBooked,
-            },
-        };
-
         if (!booking?.customerId) {
             dispatch(setToast({ type: TOAST.error, text: ERROR.booking }));
 
             return;
         }
+        const payload = {
+            data: {
+                handed: true,
+                book: id,
+                recipient: booking.customerId,
+                dateHandedFrom: currentDateString(),
+                dateHandedTo: twoWeeksLaterDateString(),
+                recipientFirstName: booking.customerFirstName,
+                recipientLastName: booking.customerLastName,
+                isBooked,
+            },
+        };
 
         if (booking?.customerId) {
             dispatch(issueRequest(payload));
@@ -96,7 +95,7 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
 
     const prolongationBook = (e: SyntheticEvent<EventTarget>) => {
         e.preventDefault();
-        dispatch(prolongationRequest({ deliveryId: delivery!.id, book: id }));
+        dispatch(prolongationRequest({ deliveryId: delivery!.id, bookId: id }));
     };
 
     return (

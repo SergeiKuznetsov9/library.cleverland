@@ -10,6 +10,7 @@ import {
 import { ClientsListItem } from '../../../store/clients/types';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { clientsFilterStatusSelector } from '../../../store/search/selectors';
+import { filterUsers } from '../../../utils/filterings';
 import { ClientCardAdmin } from '../client-card-admin';
 import { MenuAdmin } from '../menu-admin/menu-admin';
 
@@ -38,15 +39,6 @@ export const ClientsListAdmin = () => {
         setIsSortDesc(value);
     }, []);
 
-    const filterUsers = (clientsList: ClientsListItem[]) =>
-        clientsList.filter(
-            (client) =>
-                client.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                client.lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                client.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-                client.phone.toLowerCase().includes(searchValue.toLowerCase()),
-        );
-
     useEffect((): (() => void) => {
         getClientsByPagination();
 
@@ -59,13 +51,17 @@ export const ClientsListAdmin = () => {
         let result: ClientsListItem[] = [];
 
         if (all) {
-            result = searchValue ? filterUsers(clientsList ?? []) : clientsList ?? [];
+            result = searchValue ? filterUsers(clientsList ?? [], searchValue) : clientsList ?? [];
         }
         if (holders) {
-            result = searchValue ? filterUsers(clientsHoldersList) : clientsHoldersList;
+            result = searchValue
+                ? filterUsers(clientsHoldersList, searchValue)
+                : clientsHoldersList;
         }
         if (blocked) {
-            result = searchValue ? filterUsers(clientsBlockedList) : clientsBlockedList;
+            result = searchValue
+                ? filterUsers(clientsBlockedList, searchValue)
+                : clientsBlockedList;
         }
 
         const res = [...result];
