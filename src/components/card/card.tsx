@@ -61,7 +61,7 @@ export const Card = (props: BookType) => {
     const handleHighlight = (string: string) => highlightMatches(filter, string);
 
     const resetSearchValue = () => {
-        dispatch(searchBookList(''));
+        dispatch(searchBookList());
     };
 
     const handleOpenTakeReviewModal = (e: SyntheticEvent<EventTarget>) => {

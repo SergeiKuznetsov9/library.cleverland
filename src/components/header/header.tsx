@@ -29,7 +29,7 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
     }, [dispatch]);
 
     const resetSearchValue = () => {
-        dispatch(searchBookList(''));
+        dispatch(searchBookList());
     };
 
     const getDownlevelUrl = () => {

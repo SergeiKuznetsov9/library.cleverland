@@ -25,8 +25,8 @@ export const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
-        searchBookList: (state, action: PayloadAction<string>) => {
-            state.filter = action.payload;
+        searchBookList: (state, action: PayloadAction<string | undefined>) => {
+            state.filter = action.payload || '';
         },
         setSortCriterion: (state, action: PayloadAction<Sorting[]>) => {
             state.sortCriteria = action.payload;

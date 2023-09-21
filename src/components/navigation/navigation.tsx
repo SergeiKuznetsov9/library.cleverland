@@ -95,7 +95,7 @@ export const Navigation = ({
                             }
                             onClick={() => {
                                 setButtonState?.(false);
-                                dispatch(searchBookList(''));
+                                dispatch(searchBookList());
                             }}
                             data-test-id={`${dataTestid}-books`}
                         >
@@ -114,7 +114,7 @@ export const Navigation = ({
                                     }
                                     onClick={() => {
                                         setButtonState?.(false);
-                                        dispatch(searchBookList(''));
+                                        dispatch(searchBookList());
                                     }}
                                     data-test-id={`${dataTestid}-${path}`}
                                 >
@@ -148,7 +148,7 @@ export const Navigation = ({
                     onClick={() => {
                         setMenuBook(false);
                         setButtonState?.(false);
-                        dispatch(searchBookList(''));
+                        dispatch(searchBookList());
                     }}
                     className={({ isActive }) =>
                         isActive ? classNames(styles.navLink, styles.navLinkActive) : styles.navLink
@@ -161,7 +161,7 @@ export const Navigation = ({
                     onClick={() => {
                         setMenuBook(false);
                         setButtonState?.(false);
-                        dispatch(searchBookList(''));
+                        dispatch(searchBookList());
                     }}
                     className={({ isActive }) =>
                         isActive ? classNames(styles.navLink, styles.navLinkActive) : styles.navLink
