@@ -123,7 +123,7 @@ export const Card = (props: BookType) => {
                             view='primary'
                             onClick={handleCancelBooking}
                         >
-                            Отменить броньrfgdrg
+                            Отменить бронь
                         </Button>
                     </div>
                 ) : (

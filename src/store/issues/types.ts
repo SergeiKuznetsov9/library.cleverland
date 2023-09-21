@@ -26,7 +26,8 @@ export type IssuePayload = {
 export type ReturnPayload = {
     isIssued: boolean;
     deliveryId: number;
-    book: number;
+    bookId: number;
+    recipientId: number;
 };
 
 export type ProlongationPayload = {

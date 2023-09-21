@@ -39,4 +39,5 @@ export const CLIENTS_URL = {
 export const ISSUE_URL = {
     issue: `${BASE_URL}/deliveries`,
     prolongation: `${BASE_URL}/deliveries/continue`,
+    history: `${BASE_URL}/histories`,
 };

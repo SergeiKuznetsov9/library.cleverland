@@ -3,11 +3,12 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 
 import { axiosInstance } from '../../api/axios';
-import { ISSUE_URL } from '../../constants/api';
+import { CLIENTS_URL, ISSUE_URL } from '../../constants/api';
 import { ERROR } from '../../constants/errors';
 import { TOAST } from '../../constants/toast';
 import { MESSAGES } from '../../constants/toast-messages';
 import { addDeliveryStateToBook, removeDeliveryStateFromBook, removeIssuedBook } from '../books';
+import { ClientData } from '../clients/types';
 import { setToast } from '../view';
 
 import { DeliveryModel, IssuePayload, ProlongationPayload, ReturnPayload } from './types';
@@ -56,19 +57,67 @@ function* issueRequestWorker({ payload }: PayloadAction<IssuePayload>) {
     }
 }
 
-function* returnRequestWorker({ payload }: PayloadAction<ReturnPayload>) {
+function* createHistory(bookId: number, recipientId: number) {
     try {
-        yield call(axiosInstance.delete, `${ISSUE_URL.issue}/${payload.deliveryId}`);
+        yield call(axiosInstance.post, `${ISSUE_URL.history}`, {
+            data: {
+                book: bookId,
+                user: recipientId,
+            },
+        });
+
+        yield put(setToast({ type: TOAST.success, text: MESSAGES.createHistory }));
+    } catch (error) {
+        yield put(setToast({ type: TOAST.error, text: ERROR.createHistoryError }));
+    }
+}
+
+function* updateHistory(bookId: number, historyId: number) {
+    try {
+        yield call(axiosInstance.put, `${ISSUE_URL.history}/${historyId}`, {
+            data: {
+                book: bookId,
+            },
+        });
+        yield put(setToast({ type: TOAST.success, text: MESSAGES.updateHistory }));
+    } catch (error) {
+        yield put(setToast({ type: TOAST.error, text: ERROR.updateHistoryError }));
+    }
+}
+
+function* changeHistory(recipientId: number, bookId: number) {
+    try {
+        const responseUserData: AxiosResponse<ClientData> = yield call(
+            axiosInstance.get,
+            `${CLIENTS_URL.clients}/${recipientId}`,
+        );
+
+        if (!responseUserData.data.history.id) {
+            yield createHistory(bookId, recipientId);
+        } else {
+            yield updateHistory(bookId, responseUserData.data.history.id);
+        }
+    } catch (error) {
+        yield put(setToast({ type: TOAST.error, text: ERROR.getUserDataError }));
+    }
+}
+
+function* returnRequestWorker({ payload }: PayloadAction<ReturnPayload>) {
+    const { isIssued, deliveryId, bookId, recipientId } = payload;
+
+    try {
+        yield call(axiosInstance.delete, `${ISSUE_URL.issue}/${deliveryId}`);
 
         yield put(returnRequestSuccess());
 
-        if (payload.isIssued) {
-            yield put(removeIssuedBook(payload.book));
+        if (isIssued) {
+            yield put(removeIssuedBook(bookId));
         } else {
-            yield put(removeDeliveryStateFromBook(payload.book));
+            yield put(removeDeliveryStateFromBook(bookId));
         }
 
         yield put(setToast({ type: TOAST.success, text: MESSAGES.return }));
+        yield changeHistory(recipientId, bookId);
     } catch {
         yield put(returnRequestFailure());
         yield put(setToast({ type: TOAST.error, text: ERROR.returnError }));

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, SyntheticEvent } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -56,7 +56,8 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
     const { isBooked, isIssued } = useAppSelector(booksFilterStatusSelector);
     const handleHighlight = (string: string) => highlightMatches(searchValue, string);
 
-    const issueBook = () => {
+    const issueBook = (e: SyntheticEvent<EventTarget>) => {
+        e.preventDefault();
         const payload = {
             data: {
                 handed: true,
@@ -81,11 +82,20 @@ export const BookCardAdmin: FC<BookCardAdminProps> = ({
         }
     };
 
-    const returnBook = () => {
-        dispatch(returnRequest({ isIssued, deliveryId: delivery!.id, book: id }));
+    const returnBook = (e: SyntheticEvent<EventTarget>) => {
+        e.preventDefault();
+        dispatch(
+            returnRequest({
+                isIssued,
+                deliveryId: delivery!.id,
+                bookId: id,
+                recipientId: delivery!.recipientId,
+            }),
+        );
     };
 
-    const prolongationBook = () => {
+    const prolongationBook = (e: SyntheticEvent<EventTarget>) => {
+        e.preventDefault();
         dispatch(prolongationRequest({ deliveryId: delivery!.id, book: id }));
     };
 
