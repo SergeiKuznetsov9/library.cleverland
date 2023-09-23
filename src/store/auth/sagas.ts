@@ -46,7 +46,11 @@ function* authRequestWorker({ payload }: PayloadAction<Credentials>) {
         const { response } = error as AxiosError;
 
         if (response?.status === 400) {
-            yield put(authFailure('Неверный логин или пароль!'));
+            yield put(
+                authFailure(
+                    (response as AxiosResponse<{ error: { message: string } }>).data.error.message,
+                ),
+            );
         } else {
             yield put(authFailure(true));
         }

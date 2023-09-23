@@ -38,7 +38,18 @@ export const NavigationAdmin = ({ className, onClickItemMenu }: NavigationAdminP
     };
 
     const onToggleClientsFilter = (filterName: ClientsFilterKeys, filterValue: boolean) => {
-        dispatch(setClientsFilter({ filterName, filterValue }));
+        const payload = {
+            all: false,
+            holders: false,
+            blocked: false,
+        };
+
+        payload[filterName] = filterValue;
+        const values = Object.values(payload);
+
+        if (!values.includes(true)) payload.all = true;
+
+        dispatch(setClientsFilter(payload));
     };
 
     return (

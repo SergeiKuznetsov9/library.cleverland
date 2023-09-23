@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { bookCategoriesRequest } from '../../store/books';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { searchbookList } from '../../store/search';
+import { searchBookList } from '../../store/search';
 import { getUserFullInfoSelector } from '../../store/user/selectors';
 import { headerTitle } from '../../utils/header-title';
 import { BurgerMenu } from '../burger-menu';
@@ -29,7 +29,13 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
     }, [dispatch]);
 
     const resetSearchValue = () => {
-        dispatch(searchbookList(''));
+        dispatch(searchBookList());
+    };
+
+    const getDownlevelUrl = () => {
+        const parts = path.split('/');
+
+        return parts.slice(0, 2).join('/');
     };
 
     return (
@@ -46,13 +52,14 @@ export const Header = ({ path, userFirstName, avatar }: HeaderPropsType) => {
 
             <div className={styles.block}>
                 <h2 className={styles.title}>
-                    {/^admin\/users\/\d+$/.test(path) && role.type === 'admin' ? (
+                    {/^admin\/(users|books)\/\d+$/.test(path) && role.type === 'admin' ? (
                         <React.Fragment>
-                            <Link to='/admin/users'>
+                            <Link to={getDownlevelUrl()}>
                                 <span className={styles.secondaryText}>Администрирование</span>
                                 <img className={styles.homeLogo} src={homeLogo} alt='home' />
                             </Link>{' '}
-                            / <span>Пользователь</span>
+                            / {path.includes('users') && <span>Пользователь</span>}
+                            {path.includes('books') && <span>Книга</span>}
                         </React.Fragment>
                     ) : (
                         headerTitle(path, role?.type)

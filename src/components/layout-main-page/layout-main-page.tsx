@@ -9,7 +9,7 @@ import { Navigation } from '../navigation';
 import styles from './layout-main-page.module.scss';
 
 export const LayoutMainPage = () => {
-    const { pathname } = useLocation(); // TODO CustomHook, проверку роли
+    const { pathname } = useLocation();
     const [isAdminNav, setIsAdminNav] = useState(pathname.includes('admin'));
     const { role } = useAppSelector(getUserFullInfoSelector);
 

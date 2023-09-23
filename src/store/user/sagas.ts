@@ -3,7 +3,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 
 import { axiosInstance } from '../../api/axios';
-import { FILE_UPLOAD, USERS_URL } from '../../constants/api';
+import { CLIENTS_URL, FILE_UPLOAD } from '../../constants/api';
 import { ERROR } from '../../constants/errors';
 import { TOAST } from '../../constants/toast';
 import { MESSAGES } from '../../constants/toast-messages';
@@ -31,7 +31,7 @@ function* userRequestWorker({ payload }: PayloadAction<string>) {
     try {
         const { data }: AxiosResponse<ResponseUser> = yield call(
             axiosInstance.get,
-            `${USERS_URL.user}/${payload}`,
+            `${CLIENTS_URL.clients}/${payload}`,
         );
 
         yield put(userRequestSuccess(data));
@@ -44,7 +44,7 @@ function* getAuthenticatedUserWorker() {
     try {
         const { data }: AxiosResponse<ResponseUser> = yield call(
             axiosInstance.get,
-            `${USERS_URL.user}/me`,
+            `${CLIENTS_URL.clients}/me`,
         );
 
         yield put(authenticatedUserSuccess(data));
@@ -59,7 +59,7 @@ function* updateUserWorker({ payload }: PayloadAction<UpdateUserActionType>) {
     try {
         const { data }: AxiosResponse<ResponseUser> = yield call(
             axiosInstance.put,
-            `${USERS_URL.user}/${id}`,
+            `${CLIENTS_URL.clients}/${id}`,
             { username, password, email, firstName, lastName, phone },
         );
 
@@ -94,7 +94,7 @@ function* uploadAvatarWorker({ payload }: PayloadAction<UploadAvatarActionType>)
         if (data) {
             const { data: userData }: AxiosResponse<ResponseUser> = yield call(
                 axiosInstance.put,
-                `${USERS_URL.user}/${id}`,
+                `${CLIENTS_URL.clients}/${id}`,
                 body,
             );
 

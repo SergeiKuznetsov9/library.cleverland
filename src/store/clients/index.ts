@@ -16,6 +16,16 @@ export const initialState: ClientsType = {
         isError: false,
         data: null,
     },
+    clientBlock: {
+        isLoading: false,
+        isSuccess: false,
+        isError: false,
+    },
+    clientUnblock: {
+        isLoading: false,
+        isSuccess: false,
+        isError: false,
+    },
 };
 
 export const clientsSlice = createSlice({
@@ -24,6 +34,8 @@ export const clientsSlice = createSlice({
     reducers: {
         clientsListRequest: (state) => {
             state.clientsList.isLoading = true;
+            state.clientsList.isError = false;
+            state.clientsList.isSuccess = false;
         },
         clientsListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
             state.clientsList.isAllDownloaded = action.payload;
@@ -45,6 +57,8 @@ export const clientsSlice = createSlice({
         },
         clientRequest: (state, action: PayloadAction<string>) => {
             state.client.isLoading = true;
+            state.client.isError = false;
+            state.client.isSuccess = false;
         },
         clientRequestSuccess: (state, action: PayloadAction<ClientData>) => {
             state.client.isLoading = false;
@@ -58,6 +72,52 @@ export const clientsSlice = createSlice({
             state.client.isSuccess = false;
             state.client.data = null;
         },
+
+        clientBlock: (state, action: PayloadAction<number>) => {
+            state.clientBlock.isLoading = true;
+            state.clientBlock.isError = false;
+            state.clientBlock.isSuccess = false;
+        },
+        clientBlockSuccess: (state) => {
+            state.clientBlock.isLoading = false;
+            state.clientBlock.isError = false;
+            state.clientBlock.isSuccess = true;
+        },
+        clientBlockFailure: (state) => {
+            state.clientBlock.isLoading = false;
+            state.clientBlock.isError = true;
+            state.clientBlock.isSuccess = false;
+        },
+
+        clientUnblock: (state, action: PayloadAction<number>) => {
+            state.clientUnblock.isLoading = true;
+            state.clientUnblock.isError = false;
+            state.clientUnblock.isSuccess = false;
+        },
+        clientUnblockSuccess: (state) => {
+            state.clientUnblock.isLoading = false;
+            state.clientUnblock.isError = false;
+            state.clientUnblock.isSuccess = true;
+        },
+        clientUnblockFailure: (state) => {
+            state.clientUnblock.isLoading = false;
+            state.clientUnblock.isError = true;
+            state.clientUnblock.isSuccess = false;
+        },
+
+        toggleClientBlocking: (state, action: PayloadAction<{ id: number; status: boolean }>) => {
+            const { id, status } = action.payload;
+
+            state.clientsList.data =
+                state.clientsList.data?.map((client) => {
+                    if (client.id === id) {
+                        return { ...client, blocked: status };
+                    }
+
+                    return client;
+                }) ?? null;
+        },
+
         resetClientData: (state) => {
             state.client.data = null;
         },
@@ -74,4 +134,14 @@ export const {
     clientRequestSuccess,
     clientRequestFailure,
     resetClientData,
+
+    clientBlock,
+    clientBlockSuccess,
+    clientBlockFailure,
+
+    clientUnblock,
+    clientUnblockSuccess,
+    clientUnblockFailure,
+
+    toggleClientBlocking,
 } = clientsSlice.actions;

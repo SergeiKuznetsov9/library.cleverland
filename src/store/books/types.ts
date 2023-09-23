@@ -74,8 +74,8 @@ export type BookListItem = {
     };
     categories: string[];
     id: number;
-    booking: Booking;
-    delivery: Delivery;
+    booking: Booking | null;
+    delivery: Delivery | null;
     histories: [
         {
             id: number;
@@ -194,4 +194,9 @@ export type BookRateSuccess = {
         updatedAt: string;
         publishedAt: string;
     };
+};
+
+export type NewIssueAtributes = {
+    dateHandedTo: string;
+    bookId: number;
 };

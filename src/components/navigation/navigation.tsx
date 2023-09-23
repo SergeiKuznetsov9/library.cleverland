@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { NAV_MENU_ALL, NAV_MENU_MAIN } from '../../constants/nav-menu-list';
 import { getBookCategories, getBookList, getLoadingBooksList } from '../../store/books/selectors';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { searchbookList } from '../../store/search';
+import { searchBookList } from '../../store/search';
 
 import arrowBottomBlack from './assets/arrow-bottom-black.svg';
 import arrowTopColor from './assets/arrow-top-color.svg';
@@ -95,7 +95,7 @@ export const Navigation = ({
                             }
                             onClick={() => {
                                 setButtonState?.(false);
-                                dispatch(searchbookList(''));
+                                dispatch(searchBookList());
                             }}
                             data-test-id={`${dataTestid}-books`}
                         >
@@ -114,7 +114,7 @@ export const Navigation = ({
                                     }
                                     onClick={() => {
                                         setButtonState?.(false);
-                                        dispatch(searchbookList(''));
+                                        dispatch(searchBookList());
                                     }}
                                     data-test-id={`${dataTestid}-${path}`}
                                 >
@@ -148,7 +148,7 @@ export const Navigation = ({
                     onClick={() => {
                         setMenuBook(false);
                         setButtonState?.(false);
-                        dispatch(searchbookList(''));
+                        dispatch(searchBookList());
                     }}
                     className={({ isActive }) =>
                         isActive ? classNames(styles.navLink, styles.navLinkActive) : styles.navLink
@@ -161,7 +161,7 @@ export const Navigation = ({
                     onClick={() => {
                         setMenuBook(false);
                         setButtonState?.(false);
-                        dispatch(searchbookList(''));
+                        dispatch(searchBookList());
                     }}
                     className={({ isActive }) =>
                         isActive ? classNames(styles.navLink, styles.navLinkActive) : styles.navLink

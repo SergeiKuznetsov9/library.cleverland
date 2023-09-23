@@ -146,6 +146,7 @@ export const BooksListAdmin = () => {
                 {filteredBookList?.map((book) => (
                     <BookCardAdmin
                         key={book.id}
+                        id={book.id}
                         className={styles.bookCard}
                         image={book.image}
                         title={book.title}

@@ -12,6 +12,16 @@ export type ClientsType = {
         isError: boolean;
         data: null | ClientData;
     };
+    clientBlock: {
+        isLoading: boolean;
+        isSuccess: boolean;
+        isError: boolean;
+    };
+    clientUnblock: {
+        isLoading: boolean;
+        isSuccess: boolean;
+        isError: boolean;
+    };
 };
 
 export type ClientDelivery = {

@@ -6,6 +6,7 @@ import { createHashHistory } from 'history';
 import { authSlice } from './auth';
 import { booksSlice } from './books';
 import { clientsSlice } from './clients';
+import { issueSlice } from './issues';
 import { rootSaga } from './saga';
 import { searchSlice } from './search';
 import { userSlice } from './user';
@@ -25,6 +26,7 @@ export const reducer = {
     auth: authSlice.reducer,
     user: userSlice.reducer,
     clients: clientsSlice.reducer,
+    issues: issueSlice.reducer,
 };
 
 export const store = configureStore({

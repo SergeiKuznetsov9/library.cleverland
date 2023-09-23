@@ -24,3 +24,13 @@ export const isDatePass = (stringDate: string): boolean => {
 
     return inputDate < currentDate;
 };
+
+export const currentDateString = () => new Date().toISOString();
+
+export const twoWeeksLaterDateString = () => {
+    const currentDate = new Date();
+
+    currentDate.setDate(currentDate.getDate() + 14);
+
+    return currentDate.toISOString();
+};

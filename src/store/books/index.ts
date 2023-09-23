@@ -4,6 +4,7 @@ import {
     DefaultValuesType,
     UpdateCommentPayloadType,
 } from '../../components/modal-rate-book/modal-rate-book';
+import { DeliveryModel } from '../issues/types';
 
 import {
     BookCategoriesDataType,
@@ -15,6 +16,8 @@ import {
     BookListItem,
     BookListPaginationPayload,
     BooksType,
+    Delivery,
+    NewIssueAtributes,
 } from './types';
 
 export const initialState: BooksType = {
@@ -68,6 +71,8 @@ export const booksSlice = createSlice({
     reducers: {
         bookListRequest: (state) => {
             state.bookList.isLoading = true;
+            state.bookList.isError = false;
+            state.bookList.isSuccess = false;
         },
         bookListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
             state.bookList.isAllDownloaded = action.payload;
@@ -77,6 +82,8 @@ export const booksSlice = createSlice({
             action: PayloadAction<BookListPaginationPayload>,
         ) => {
             state.bookList.isLoading = true;
+            state.bookList.isError = false;
+            state.bookList.isSuccess = false;
         },
         bookListRequestSuccess: (state, action: PayloadAction<BookListItem[]>) => {
             state.bookList.isLoading = false;
@@ -106,6 +113,8 @@ export const booksSlice = createSlice({
         },
         bookRequest: (state, action: PayloadAction<string | number>) => {
             state.book.isLoading = true;
+            state.book.isError = false;
+            state.book.isSuccess = false;
         },
         bookRequestSuccess: (state, action: PayloadAction<BookDataType>) => {
             state.book.isLoading = false;
@@ -125,6 +134,8 @@ export const booksSlice = createSlice({
 
         bookCategoriesRequest: (state) => {
             state.bookCategories.isLoading = true;
+            state.bookCategories.isError = false;
+            state.bookCategories.isSuccess = false;
         },
         bookCategoriesSuccess: (state, action: PayloadAction<BookCategoriesDataType>) => {
             state.bookCategories.isLoading = false;
@@ -148,12 +159,18 @@ export const booksSlice = createSlice({
         },
         bookingRequest: (state, { payload }: PayloadAction<BookingPayload>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingUpdateRequest: (state, { payload }: PayloadAction<BookingUpdatePayload>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingDeleteRequest: (state, action: PayloadAction<BooksType['booking']['id']>) => {
             state.booking.isLoading = true;
+            state.booking.isError = false;
+            state.booking.isSuccess = false;
         },
         bookingRequestSuccess: (
             state,
@@ -246,6 +263,48 @@ export const booksSlice = createSlice({
             state.bookReview.isError = false;
             state.bookReview.isSuccess = false;
         },
+        addDeliveryStateToBook: (
+            state,
+            action: PayloadAction<{ deliveryModel: DeliveryModel; bookId: number }>,
+        ) => {
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === action.payload.bookId) {
+                    return { ...book, delivery: action.payload.deliveryModel, booking: null };
+                }
+
+                return book;
+            });
+
+            state.bookList.data = newBooksArray || [];
+        },
+        removeDeliveryStateFromBook: (state, action: PayloadAction<number>) => {
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === action.payload) {
+                    return { ...book, delivery: null };
+                }
+
+                return book;
+            });
+
+            state.bookList.data = newBooksArray ?? [];
+        },
+        removeIssuedBook: (state, action: PayloadAction<number>) => {
+            const newBooksArray = state.bookList.data?.filter((book) => book.id !== action.payload);
+
+            state.bookList.data = newBooksArray ?? [];
+        },
+        changeIssueAtributes: (state, action: PayloadAction<NewIssueAtributes>) => {
+            const { dateHandedTo, bookId } = action.payload;
+            const newBooksArray = state.bookList.data?.map((book) => {
+                if (book.id === bookId) {
+                    return { ...book, delivery: { ...(book.delivery as Delivery), dateHandedTo } };
+                }
+
+                return book;
+            });
+
+            state.bookList.data = newBooksArray ?? [];
+        },
     },
 });
 
@@ -280,4 +339,7 @@ export const {
     bookReviewUpdateRequest,
     bookReviewUpdateSuccess,
     bookReviewUpdateFailure,
+    addDeliveryStateToBook,
+    removeDeliveryStateFromBook,
+    removeIssuedBook,
 } = booksSlice.actions;

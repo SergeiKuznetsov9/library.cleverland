@@ -31,6 +31,8 @@ export const userSlice = createSlice({
     reducers: {
         userRequest: (state, action: PayloadAction<string>) => {
             state.isLoading = true;
+            state.isError = false;
+            state.isSuccess = false;
         },
         userRequestSuccess: (state, action: PayloadAction<ResponseUser>) => {
             state.isLoading = false;
@@ -40,6 +42,8 @@ export const userSlice = createSlice({
         },
         authenticatedUserRequest: (state) => {
             state.isLoading = true;
+            state.isError = false;
+            state.isSuccess = false;
         },
         authenticatedUserSuccess: (state, action: PayloadAction<ResponseUser>) => {
             state.isLoading = false;
@@ -54,6 +58,8 @@ export const userSlice = createSlice({
         },
         updateUserRequest: (state, action: PayloadAction<UpdateUserActionType>) => {
             state.isUpdateLoading = true;
+            state.isUpdateError = false;
+            state.isUpdateSuccess = false;
         },
         updateUserSuccess: (state, action: PayloadAction<ResponseUser>) => {
             state.isUpdateLoading = false;
@@ -63,6 +69,8 @@ export const userSlice = createSlice({
         },
         uploadAvatarRequest: (state, action: PayloadAction<UploadAvatarActionType>) => {
             state.isLoading = true;
+            state.isError = false;
+            state.isSuccess = false;
         },
         uploadAvatarSuccess: (state, action: PayloadAction<any>) => {
             state.isLoading = false;

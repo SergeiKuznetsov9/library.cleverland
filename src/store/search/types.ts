@@ -1,6 +1,6 @@
 import { Sorting } from '../../constants/sorting';
 
-type ClientsFilters = {
+export type ClientsFilters = {
     all: boolean;
     holders: boolean;
     blocked: boolean;
@@ -14,11 +14,6 @@ export type BooksFiltersType = {
 };
 
 export type BooksFilterKeys = keyof BooksFiltersType;
-
-export type ClientsFilteringPayload = {
-    filterName: ClientsFilterKeys;
-    filterValue: boolean;
-};
 
 export type SearchParams = {
     filter: string;
